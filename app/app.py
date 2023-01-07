@@ -1,6 +1,7 @@
 import os
 
 from flask import Flask
+from flask import render_template
 from . import db
 
 app = Flask(__name__)
@@ -21,6 +22,14 @@ db.init_app(app)
 @app.route('/')
 def hello_world():  # put application's code here
     return "Hello Tour de App!"
+
+
+@app.route('/db')
+def log_list():  # put application's code here
+    for row in db.query_db('select * from devlog dl join developer d on dl.developer_id = d.id'):
+        print(row['work_date'], ' Language: ', row['lang'])
+    rows = db.query_db('select * from devlog dl join developer d on dl.developer_id = d.id')
+    return render_template('log_list.html', rows=rows)
 
 
 if __name__ == '__main__':
