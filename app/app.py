@@ -24,7 +24,7 @@ def hello_world():  # put application's code here
     return "Hello Tour de App!"
 
 
-@app.route('/db')
+@app.route('/list')
 def log_list():  # put application's code here
     for row in db.query_db('select * from devlog dl join developer d on dl.developer_id = d.id'):
         print(row['work_date'], ' Language: ', row['lang'])
