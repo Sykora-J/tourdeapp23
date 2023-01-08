@@ -77,4 +77,4 @@ class SingleLog:
 
     def lang_css(self):
         lower_lang = self.lang.lower()
-        return re.sub('[^a-zA-Z]+', '_', lower_lang)
+        return re.sub('[^a-zA-Z]', '_', lower_lang)
