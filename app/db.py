@@ -65,6 +65,14 @@ def select_all_logs():
     return logs
 
 
+def select_all_devs():
+    rows = query_db('select * from developer order by name')
+    devs = []
+    for row in rows:
+        devs.append(row['name'])
+    return devs
+
+
 class SingleLog:
     def __init__(self, log_id, work_date, lang, duration, rating, note, developer_name):
         self.log_id = log_id
