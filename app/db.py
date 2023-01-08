@@ -73,6 +73,18 @@ def select_all_devs():
     return devs
 
 
+def insert_log(name, work_date, lang, duration, rating, note):
+    print(name)
+    cur = get_db().execute('select id from developer where name=? limit 1', (name,))
+    row = cur.fetchone()
+    cur.close()
+    dev_id = row['id']
+    g.db.execute('insert into devlog (work_date, lang, duration, rating, note, developer_id) values (?,?,?,?,?,?)',
+                 (work_date, lang, duration, rating, note, dev_id))
+    g.db.commit()
+
+
+
 class SingleLog:
     def __init__(self, log_id, work_date, lang, duration, rating, note, developer_name):
         self.log_id = log_id
