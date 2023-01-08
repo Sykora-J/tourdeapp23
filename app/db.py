@@ -53,3 +53,8 @@ def query_db(query, args=(), one=False):
     rv = cur.fetchall()
     cur.close()
     return (rv[0] if rv else None) if one else rv
+
+
+def select_all_logs():
+    return query_db('select * from devlog dl join developer d on dl.developer_id = d.id')
+

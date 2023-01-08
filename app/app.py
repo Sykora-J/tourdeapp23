@@ -26,9 +26,9 @@ def hello_world():  # put application's code here
 
 @app.route('/list')
 def log_list():  # put application's code here
-    for row in db.query_db('select * from devlog dl join developer d on dl.developer_id = d.id'):
+    for row in db.select_all_logs():
         print(row['work_date'], ' Language: ', row['lang'])
-    rows = db.query_db('select * from devlog dl join developer d on dl.developer_id = d.id')
+    rows = db.select_all_logs()
     return render_template('log_list.html', rows=rows)
 
 
