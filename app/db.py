@@ -3,6 +3,7 @@ from flask import current_app, g
 from flask.cli import with_appcontext
 
 import sqlite3
+import re
 
 
 def get_db():
@@ -73,3 +74,7 @@ class SingleLog:
         self.rating = rating
         self.note = note
         self.developer_name = developer_name
+
+    def lang_css(self):
+        lower_lang = self.lang.lower()
+        return re.sub('[^a-zA-Z]+', '_', lower_lang)
