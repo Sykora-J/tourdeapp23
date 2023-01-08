@@ -56,5 +56,20 @@ def query_db(query, args=(), one=False):
 
 
 def select_all_logs():
-    return query_db('select * from devlog dl join developer d on dl.developer_id = d.id')
+    rows = query_db('select * from devlog dl join developer d on dl.developer_id = d.id')
+    logs = []
+    for row in rows:
+        logs.append(SingleLog(row['id'], row['work_date'], row['lang'], row['duration'], row['rating'], row['note'],
+                              row['name']))
+    return logs
 
+
+class SingleLog:
+    def __init__(self, log_id, work_date, lang, duration, rating, note, developer_name):
+        self.log_id = log_id
+        self.work_date = work_date
+        self.lang = lang
+        self.duration = duration
+        self.rating = rating
+        self.note = note
+        self.developer_name = developer_name
