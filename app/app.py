@@ -21,11 +21,6 @@ db.init_app(app)
 
 
 @app.route('/')
-def hello_world():  # put application's code here
-    return "Hello Tour de App!"
-
-
-@app.route('/list')
 def log_list():  # put application's code here
     for_dev = request.args.get('dev', 'all')
     logs = db.select_all_logs()  # TODO log for only one dev
@@ -33,7 +28,7 @@ def log_list():  # put application's code here
     return render_template('log_list.html', logs=logs, devs=devs, for_dev=for_dev)
 
 
-@app.route('/form', methods=['POST', 'GET'])
+@app.route('/new', methods=['POST', 'GET'])
 def log_form():  # put application's code here
     langs = ['Python', 'Java', 'C++']  # todo make it better
     devs = db.select_all_devs()

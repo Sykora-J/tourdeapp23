@@ -1,9 +1,13 @@
+.navbar-nav{
+    flex-direction: row;
+}
+
 .column a{
     color: inherit;
 }
 
 .python{
-    color:darkred ;
+    color: darkred;
 }
 
 .java{
