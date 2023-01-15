@@ -22,10 +22,16 @@ db.init_app(app)
 
 @app.route('/')
 def log_list():  # put application's code here
-    for_dev = request.args.get('dev', 'all')
+    for_dev = request.args.get('dev', 'All')
     logs = db.select_all_logs()  # TODO log for only one dev
     devs = db.select_all_devs()
     return render_template('log_list.html', logs=logs, devs=devs, for_dev=for_dev)
+
+
+@app.route('/devs')
+def dev_form():  # put application's code here
+    devs = db.select_all_devs()
+    return render_template('dev_form.html', devs=devs)
 
 
 @app.route('/new', methods=['POST', 'GET'])
