@@ -23,20 +23,20 @@ db.init_app(app)
 @app.route('/')
 def log_list():  # put application's code here
     for_dev = request.args.get('dev', 'All')
-    logs = db.select_all_logs()  # TODO log for only one dev
+    logs = db.select_all_logs()
     devs = db.select_all_devs()
     return render_template('log_list.html', logs=logs, devs=devs, for_dev=for_dev)
 
 
-@app.route('/devs')
+@app.route('/devs')  # TODO take out dev_id
 def dev_form():  # put application's code here
-    devs = db.select_all_devs()
+    devs = db.select_all_devs()  # TODO log for only one dev
     return render_template('dev_form.html', devs=devs)
 
 
 @app.route('/new', methods=['POST', 'GET'])
 def log_form():  # put application's code here
-    langs = ['Python', 'Java', 'C++']  # todo make it better
+    langs = ['Python', 'Java', 'C++']  # TODO make it better
     devs = db.select_all_devs()
     if request.method == 'POST':
         name = request.form.get('dev', type=str)

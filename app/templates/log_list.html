@@ -13,23 +13,25 @@
             </a>
             <ul class="dropdown-menu">
                 {% for dev in devs %}
-                <li><a class="dropdown-item" href="/dev/{{ dev }}">{{ dev }}</a></li>
+                <li><a class="dropdown-item" href="/dev/{{ dev.dev_id }}">{{ dev.name }}</a></li>
                 {% endfor %}
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item" href="/">All</a></li>
             </ul>
           </div>
+{#
           <div>
             <form action="">
             <label for="devs">Choose a developer:</label>
             <select id="dev" name="dev">
                 {% for dev in devs %}
-                <option value="{{ dev }}">{{ dev }}</option>
+                <option value="{{ dev.dev_id }}">{{ dev.name }}</option>
                 {% endfor %}
             </select>
             <input type="submit" value="List for dev">
         </form>
       </div>
+#}
         <h3>
             {{ for_dev }}
         </h3>

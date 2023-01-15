@@ -9,7 +9,7 @@
       <div class="container text-center">
           <ul>
               {% for dev in devs %}
-                  <li>{{ dev }}</li>
+                  <li>{{ dev.name }}</li>
               {% endfor %}
           </ul>
           <form action="/devs">

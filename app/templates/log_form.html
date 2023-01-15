@@ -12,7 +12,7 @@
             <label for="dev">Who did the work?</label>
             <select id="dev" name="dev">
                 {% for dev in devs %}
-                <option value="{{ dev }}">{{ dev }}</option>
+                <option value="{{ dev.dev_id }}">{{ dev.name }}</option>
                 {% endfor %}
             </select>
             <label for="work_date">Date:</label>
@@ -34,7 +34,7 @@
       </div>
     </div>
   </section>
-  <p>
+{#  <p>
       <a class="btn btn-primary" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false"
          aria-controls="collapseExample">
           Link with href
@@ -49,7 +49,7 @@
           Some placeholder content for the collapse component. This panel is hidden by default but revealed when the
           user activates the relevant trigger.
       </div>
-  </div>
+  </div>#}
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
           integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
           crossorigin="anonymous"></script>

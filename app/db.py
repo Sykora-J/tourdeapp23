@@ -69,8 +69,8 @@ def select_all_devs():
     rows = query_db('select * from developer order by name')
     devs = []
     for row in rows:
-        devs.append(row['name'])
-    return devs
+        devs.append(SingleDev(row['id'], row['name']))
+    return devs  # devs is a list containing name and dev_id
 
 
 def insert_log(name, work_date, lang, duration, rating, note):
@@ -83,6 +83,11 @@ def insert_log(name, work_date, lang, duration, rating, note):
                  (work_date, lang, duration, rating, note, dev_id))
     g.db.commit()
 
+
+class SingleDev:
+    def __init__(self, dev_id, name):
+        self.dev_id = dev_id
+        self.name = name
 
 
 class SingleLog:
