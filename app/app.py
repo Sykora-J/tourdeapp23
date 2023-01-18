@@ -28,9 +28,14 @@ def log_list():  # put application's code here
     return render_template('log_list.html', logs=logs, devs=devs, for_dev=for_dev)
 
 
+# TODO delete_dev
+# TODO delete_log
+# TODO update_log
+
+
 @app.route('/devs')  # TODO take out dev_id
 def dev_form():  # put application's code here
-    devs = db.select_all_devs()  # TODO log for only one dev
+    devs = db.select_all_devs()  # TODO select_dev_logs (single dev)
     return render_template('dev_form.html', devs=devs)
 
 

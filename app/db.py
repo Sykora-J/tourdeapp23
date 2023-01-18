@@ -56,14 +56,24 @@ def query_db(query, args=(), one=False):
     return (rv[0] if rv else None) if one else rv
 
 
-def select_all_logs():
+def select_all_logs():  # TODO make a list (single day) of lists (single log) containing rows
     rows = query_db('select * from devlog dl join developer d on dl.developer_id = d.id')
     logs = []
     for row in rows:
         logs.append(SingleLog(row['id'], row['work_date'], row['lang'], row['duration'], row['rating'], row['note'],
                               row['name']))
-    return logs
+    return logs  # TODO rename logs to all_logs
 
+
+# TODO select_dev_logs (single dev)
+# TODO insert_dev
+    # TODO insert_dev ERROR - same name
+# TODO delete_dev
+    # TODO delete_dev ERROR - already deleted
+# TODO delete_log
+    # TODO delete_log ERROR - already deleted
+# TODO update_log
+# TODO (update_dev)
 
 def select_all_devs():
     rows = query_db('select * from developer order by name')
