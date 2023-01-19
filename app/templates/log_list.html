@@ -19,25 +19,12 @@
                 <li><a class="dropdown-item" href="/">All</a></li>
             </ul>
           </div>
-{#
-          <div>
-            <form action="">
-            <label for="devs">Choose a developer:</label>
-            <select id="dev" name="dev">
-                {% for dev in devs %}
-                <option value="{{ dev.dev_id }}">{{ dev.name }}</option>
-                {% endfor %}
-            </select>
-            <input type="submit" value="List for dev">
-        </form>
-      </div>
-#}
         <h2>
             {{ for_dev }}
         </h2>
-        <div class="container text-center">
+        <div class="container text-center" id="myGroup">
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-2 g-lg-3">
-                {% for log in logs %}
+                {% for single_date in all_logs %}
                     {% include '_single_day.html' %}
                 {% endfor %}
             </div>

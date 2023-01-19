@@ -56,22 +56,43 @@ def query_db(query, args=(), one=False):
     return (rv[0] if rv else None) if one else rv
 
 
-def select_all_logs():  # TODO make a list (single day) of lists (single log) containing rows
-    rows = query_db('select * from devlog dl join developer d on dl.developer_id = d.id')
-    logs = []
+def select_all_logs():
+    rows = query_db(
+        'select * from devlog dl join developer d on dl.developer_id = d.id order by work_date desc, id desc')
+    all_logs = []
+    last_date = '0000-00-00'
     for row in rows:
-        logs.append(SingleLog(row['id'], row['work_date'], row['lang'], row['duration'], row['rating'], row['note'],
-                              row['name']))
-    return logs  # TODO rename logs to all_logs
+        if last_date != row['work_date']:
+            date = SingleDate(row['work_date'])
+            all_logs.append(date)
+            last_date = row['work_date']
+        date.add_log(row['id'], row['work_date'], row['lang'], row['duration'], row['rating'], row['note'],
+                     row['name'])
+    return all_logs
 
 
-# TODO select_dev_logs (single dev)
+def select_dev_logs(developer_id):
+    rows = query_db(
+        'select * from devlog dl join developer d on dl.developer_id = d.id '
+        'where developer_id=? order by work_date desc, id desc', (developer_id, ))
+    dev_logs = []
+    last_date = '0000-00-00'
+    for row in rows:
+        if last_date != row['work_date']:
+            date = SingleDate(row['work_date'])
+            dev_logs.append(date)
+            last_date = row['work_date']
+        date.add_log(row['id'], row['work_date'], row['lang'], row['duration'], row['rating'], row['note'],
+                     row['name'])
+    return dev_logs
+
+
 # TODO insert_dev
-    # TODO insert_dev ERROR - same name
+# TODO insert_dev ERROR - same name
 # TODO delete_dev
-    # TODO delete_dev ERROR - already deleted
+# TODO delete_dev ERROR - already deleted
 # TODO delete_log
-    # TODO delete_log ERROR - already deleted
+# TODO delete_log ERROR - already deleted
 # TODO update_log
 # TODO (update_dev)
 
@@ -94,6 +115,14 @@ def insert_log(name, work_date, lang, duration, rating, note):
     g.db.commit()
 
 
+def dev_id_to_name(developer_id):
+    cur = get_db().execute('select name from developer where id=? limit 1', (developer_id,))
+    row = cur.fetchone()
+    cur.close()
+    name = row['name']
+    return name
+
+
 class SingleDev:
     def __init__(self, dev_id, name):
         self.dev_id = dev_id
@@ -113,3 +142,13 @@ class SingleLog:
     def lang_css(self):
         lower_lang = self.lang.lower()
         return re.sub('[^a-zA-Z]', '_', lower_lang)
+
+
+class SingleDate:
+    def __init__(self, work_date):
+        self.work_date = work_date
+        self.logs = []
+
+    def add_log(self, log_id, work_date, lang, duration, rating, note, developer_name):
+        self.logs.append(SingleLog(log_id, work_date, lang, duration, rating, note, developer_name))
+        return self.logs

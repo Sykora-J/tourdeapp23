@@ -5,25 +5,23 @@
 
 <div class="col">
     <div class="card">
-        <div class="card-body" id="myGroup">                                        {# TODO change id to date variable, decrease padding #}
-            <h4 class="card-title">12. 2. 2023</h4>                                 {# TODO change the inside of h2 to variable #}
-            {# TODO here start the log loop #}
-            <button class="btn btn-info w-100" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#collapseExample"                               {# TODO change data-bs-target to log_id variable #}
-                    aria-expanded="false" aria-controls="collapseExample">          {# TODO change aria-controls to log_id variable #}
-                <div class="row">
-                    <div class="col text-start">Python</div>                        {# TODO change to lang variable #}
-                    <div class="col text-end">69 min</div>                          {# TODO change to duration variable #}
+        <div class="card-body">                                        {# TODO decrease padding #}
+            <h4 class="card-title">{{ single_date.work_date }}</h4>
+            {% for log in single_date.logs %}
+                <button class="btn btn-info w-100" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#{{ log.log_id }}"
+                        aria-expanded="false" aria-controls="{{ log.log_id }}">
+                    <div class="row">
+                        <div class="col text-start">{{ log.lang }}</div>
+                        <div class="col text-end">{{ log.duration }} min</div>
+                    </div>
+                </button>
+                <div class="collapse" id="{{ log.log_id }}" data-bs-parent="#myGroup">
+                    <div class="card card-body">
+                        {{ log.note }}
+                    </div>
                 </div>
-            </button>
-            <div class="collapse" id="collapseExample" data-bs-parent="#myGroup">   {# TODO change data-bs-parent to log_id variable #}
-                <div class="card card-body">                                        {# TODO other log info (for loop icon rating system)#}
-                    Some placeholder content for the collapse component. This panel is hidden by default but revealed
-                    when
-                    the user activates the relevant trigger.
-                </div>
-            </div>
-            {# TODO here end the log loop #}
+            {% endfor %}
         </div>
     </div>
 </div>

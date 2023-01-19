@@ -21,11 +21,19 @@ db.init_app(app)
 
 
 @app.route('/')
-def log_list():  # put application's code here
+def all_log_list():  # put application's code here
     for_dev = request.args.get('dev', 'All')
-    logs = db.select_all_logs()
+    all_logs = db.select_all_logs()
     devs = db.select_all_devs()
-    return render_template('log_list.html', logs=logs, devs=devs, for_dev=for_dev)
+    return render_template('log_list.html', all_logs=all_logs, devs=devs, for_dev=for_dev)
+
+
+@app.route('/dev/<developer_id>')
+def dev_log_list(developer_id):  # put application's code here
+    for_dev = db.dev_id_to_name(developer_id)
+    dev_logs = db.select_dev_logs(developer_id)
+    devs = db.select_all_devs()
+    return render_template('log_list.html', all_logs=dev_logs, devs=devs, for_dev=for_dev)
 
 
 # TODO delete_dev
@@ -33,9 +41,11 @@ def log_list():  # put application's code here
 # TODO update_log
 
 
-@app.route('/devs')  # TODO take out dev_id
+@app.route('/devs')
 def dev_form():  # put application's code here
-    devs = db.select_all_devs()  # TODO select_dev_logs (single dev)
+    devs = db.select_all_devs()
+    all_logs = db.select_all_logs()
+    print(all_logs[2].logs)
     return render_template('dev_form.html', devs=devs)
 
 
