@@ -12,7 +12,7 @@
             <label for="dev">Who did the work?</label>
             <select id="dev" name="dev">
                 {% for dev in devs %}
-                <option value="{{ dev.dev_id }}">{{ dev.name }}</option>
+                <option value="{{ dev.name }}">{{ dev.name }}</option>
                 {% endfor %}
             </select>
             <label for="work_date">Date:</label>
