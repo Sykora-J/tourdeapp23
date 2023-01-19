@@ -58,9 +58,9 @@ def query_db(query, args=(), one=False):
 
 def select_all_logs():
     rows = query_db(
-        'select * from devlog dl join developer d on dl.developer_id = d.id order by work_date desc, id desc')
+        'select * from devlog dl join developer d on dl.developer_id = d.id order by work_date desc, dl.id desc')
     all_logs = []
-    last_date = '0000-00-00'
+    last_date = ''
     for row in rows:
         if last_date != row['work_date']:
             date = SingleDate(row['work_date'])
@@ -74,7 +74,7 @@ def select_all_logs():
 def select_dev_logs(developer_id):
     rows = query_db(
         'select * from devlog dl join developer d on dl.developer_id = d.id '
-        'where developer_id=? order by work_date desc, id desc', (developer_id, ))
+        'where developer_id=? order by work_date desc, dl.id desc', (developer_id, ))
     dev_logs = []
     last_date = '0000-00-00'
     for row in rows:
