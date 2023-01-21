@@ -7,16 +7,17 @@
   <header>{% include '_header.html' %}</header>
   <section class="section content">
       <div class="container text-center">
-          <ul>
-              {% for dev in devs %}
-                  <li>{{ dev.name }} <a href="/delete_dev/{{ dev.dev_id }}"><i class="bi bi-trash3-fill"></i></a></li>
-              {% endfor %}
-          </ul>
-          <form action="/create_dev" method=post>
+           <form action="/create_dev" method=post>
               <label for="new_name">Name:</label>
               <input type="text" id="new_name" name="new_name" maxlength="20">
               <input type="submit" value="Create user">
           </form>
+          <ul>
+              {% for dev in devs %}
+                  <li>{{ dev.name }} <a href="/delete_dev/{{ dev.dev_id }}"><i class="bi bi-trash3-fill"></i></a>
+                      <a href="/edit_dev/{{ dev.dev_id }}"><i class="bi bi-pencil-square"></i></a></li>
+              {% endfor %}
+          </ul>
       </div>
   </section>
   <footer class="text-center text-white">{% include '_footer.html' %}</footer>
