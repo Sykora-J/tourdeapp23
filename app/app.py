@@ -45,9 +45,10 @@ def dev_log_list(developer_id):  # put application's code here
     return render_template('log_list.html', all_logs=dev_logs, devs=devs, for_dev=for_dev)
 
 
-# TODO delete_dev
-# TODO delete_log
-# TODO update_log
+@app.route('/delete_dev/<int:developer_id>')
+def dev_delete(developer_id):
+    db.delete_dev(developer_id)
+    return redirect('/devs')
 
 
 @app.route('/devs', methods=['POST', 'GET'])
