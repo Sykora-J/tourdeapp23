@@ -74,7 +74,7 @@ def select_all_logs():
 def select_dev_logs(developer_id):
     rows = query_db(
         'select * from devlog dl join developer d on dl.developer_id = d.id '
-        'where developer_id=? order by work_date desc, dl.id desc', (developer_id, ))
+        'where developer_id=? order by work_date desc, dl.id desc', (developer_id,))
     dev_logs = []
     last_date = '0000-00-00'
     for row in rows:
@@ -87,14 +87,19 @@ def select_dev_logs(developer_id):
     return dev_logs
 
 
-# TODO insert_dev
+def select_one_log(log_id):
+    cur = get_db().execute('select * from devlog where id=? limit 1', (log_id,))
+    row = cur.fetchone()
+    cur.close()
+    return row
+
+
 # TODO insert_dev ERROR - same name
-# TODO delete_dev
 # TODO delete_dev ERROR - already deleted
-# TODO delete_log
+# TODO delete_log half done
 # TODO delete_log ERROR - already deleted
-# TODO update_log
-# TODO (update_dev)
+# TODO update_log half done
+# TODO update_dev
 
 def select_all_devs():
     rows = query_db('select * from developer order by name')
@@ -105,22 +110,60 @@ def select_all_devs():
 
 
 def insert_log(name, work_date, lang, duration, rating, note):
-    print(name)
-    cur = get_db().execute('select id from developer where name=? limit 1', (name,))
-    row = cur.fetchone()
-    cur.close()
-    dev_id = row['id']
-    g.db.execute('insert into devlog (work_date, lang, duration, rating, note, developer_id) values (?,?,?,?,?,?)',
-                 (work_date, lang, duration, rating, note, dev_id))
-    g.db.commit()
+    dev_id = dev_name_to_id(name)
+    get_db().execute('insert into devlog (work_date, lang, duration, rating, note, developer_id) values (?,?,?,?,?,?)',
+                     (work_date, lang, duration, rating, note, dev_id))
+    get_db().commit()
 
 
-def dev_id_to_name(developer_id):
-    cur = get_db().execute('select name from developer where id=? limit 1', (developer_id,))
+def delete_log(log_id):
+    get_db().execute('delete from devlog where id=?', (log_id,))
+    get_db().commit()
+
+
+def update_log(log_id, name, work_date, lang, duration, rating, note):
+    developer_id = dev_name_to_id(name)
+    get_db().execute('update devlog set work_date=?, lang=?, duration=?, rating=?, note=?, developer_id=?  where id=?',
+                     (work_date, lang, duration, rating, note, developer_id, log_id))
+    get_db().commit()
+
+
+def insert_dev(new_name):
+    get_db().execute('insert into developer (name) values (?)', (new_name,))
+    get_db().commit()
+
+
+def delete_dev(dev_id):
+    get_db().execute('delete from developer where id=?', (dev_id,))
+    get_db().commit()
+    get_db().execute('delete from devlog where developer_id=?', (dev_id,))
+    get_db().commit()
+
+
+def update_dev(dev_id, new_name):
+    get_db().execute('update developer set name=?  where id=?', (new_name, dev_id))
+    get_db().commit()
+
+
+def dev_id_to_name(dev_id):
+    cur = get_db().execute('select name from developer where id=? limit 1', (dev_id,))
     row = cur.fetchone()
     cur.close()
     name = row['name']
     return name
+
+
+def dev_name_to_id(name):
+    cur = get_db().execute('select id from developer where name=? limit 1', (name,))
+    row = cur.fetchone()
+    cur.close()
+    dev_id = row['id']
+    return dev_id
+
+
+def list_langs():
+    langs = ['Python', 'Java', 'C++']
+    return langs
 
 
 class SingleDev:

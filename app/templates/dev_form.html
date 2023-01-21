@@ -9,12 +9,12 @@
       <div class="container text-center">
           <ul>
               {% for dev in devs %}
-                  <li>{{ dev.name }}</li>
+                  <li>{{ dev.name }} <a href="/delete_dev/{{ dev.dev_id }}"><i class="bi bi-trash3-fill"></i></a></li>
               {% endfor %}
           </ul>
-          <form action="/devs">
-              <label for="name">Name:</label><br>
-              <input type="text" id="name" name="name"><br><br>
+          <form action="/create_dev" method=post>
+              <label for="new_name">Name:</label>
+              <input type="text" id="new_name" name="new_name">
               <input type="submit" value="Create user">
           </form>
       </div>
