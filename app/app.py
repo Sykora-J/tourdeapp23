@@ -68,6 +68,14 @@ def dev_insert():  # put application's code here
     return redirect('/devs')
 
 
+@app.route('/edit_dev/<int:developer_id>', methods=['POST', 'GET'])
+def dev_edit(developer_id):  # put application's code here
+    if request.method == 'POST':
+        new_name = request.form.get('new_name', type=str)
+        db.update_dev(developer_id, new_name)
+    return redirect('/devs')
+
+
 @app.route('/new', methods=['POST', 'GET'])
 def log_form():  # put application's code here
     langs = db.list_langs()
