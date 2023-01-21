@@ -1,28 +1,56 @@
 <!DOCTYPE html>
 <html lang="cs">
-  <head>
+<head>
     {% include '_head.html' %}
-  </head>
-  <body>
-  <header>{% include '_header.html' %}</header>
-  <section class="section content">
-      <div class="container text-center">
-          <form action="/create_dev" method=post>
-              <label for="new_name">Name:</label>
-              <input type="text" id="new_name" name="new_name" maxlength="20">
-              <input type="submit" value="Create user">
-          </form>
-          <ul>
-              {% for dev in devs %}
-                  <li>{{ dev.name }} <a href="/delete_dev/{{ dev.dev_id }}"><i class="bi bi-trash3-fill"></i></a>
-                      <a href="/edit_dev/{{ dev.dev_id }}"><i class="bi bi-pencil-square"></i></a></li>
-              {% endfor %}
-          </ul>
-      </div>
-  </section>
-  <footer class="text-center text-white">{% include '_footer.html' %}</footer>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
-          integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
-          crossorigin="anonymous"></script>
-  </body>
+</head>
+<body>
+<header>{% include '_header.html' %}</header>
+<section class="section content">
+    <div class="container text-center">
+        <form action="/create_dev" method=post>
+            <label for="new_name">Name:</label>
+            <input type="text" id="new_name" name="new_name" maxlength="20">
+            <input type="submit" value="Create user">
+        </form>
+        <ul>
+            {% for dev in devs %}
+                <li>
+                    {{ dev.name }}
+                    <a class="btn btn-light" href="/delete_dev/{{ dev.dev_id }}"><i class="bi bi-trash3-fill"></i></a>
+                    <button type="button" class="btn btn-light" data-bs-toggle="modal"
+                            data-bs-target="#edit_{{ dev.dev_id }}">
+                        <i class="bi bi-pencil-square"></i>
+                    </button>
+                    <div class="modal fade" id="edit_{{ dev.dev_id }}" tabindex="-1" aria-labelledby="{{ dev.dev_id }}_label"
+                         aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="{{ dev.dev_id }}_label">Change name</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                </div>
+                                <form action="/edit_dev/{{ dev.dev_id }}" method="post">
+                                    <div class="modal-body">
+                                        <label for="new_name">New name:</label>
+                                        <input type="text" id="new_name" name="new_name" maxlength="20" value="{{ dev.name }}">
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                        <input class="btn btn-secondary" type="submit" value="Confirm">
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</section>
+<footer class="text-center text-white">{% include '_footer.html' %}</footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+        crossorigin="anonymous"></script>
+</body>
 </html>
