@@ -64,7 +64,8 @@ def dev_form():  # put application's code here
 def dev_insert():  # put application's code here
     if request.method == 'POST':
         new_name = request.form.get('new_name', type=str)
-        db.insert_dev(new_name)
+        if new_name != '':
+            db.insert_dev(new_name)
     return redirect('/devs')
 
 
