@@ -5,32 +5,30 @@
 
 <div class="col">
     <div class="card">
-                <div class="card-body">                                        {# TODO decrease padding #}
+        <div class="card-body">                                        {# TODO decrease padding #}
             <h4 class="card-title">{{ single_date.work_date }}</h4>
             {% for log in single_date.logs %}
-                <button class="btn btn-info w-100" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#{{ log.log_id }}"
-                        aria-expanded="false" aria-controls="{{ log.log_id }}">
-                    <div class="row">
-                        <div class="col text-start">
-                            {% if for_dev == 'All' %}{{ log.developer_name }}
-                            {% else %}{{ log.lang }}{% endif %}
+                <div class="{{ log.lang_css() }}">
+                    <button class="btn btn-info w-100" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#{{ log.log_id }}"
+                            aria-expanded="false" aria-controls="{{ log.log_id }}">
+                        <div class="row">
+                            <div class="col text-start">
+                                {% if for_dev == 'All' %}{{ log.developer_name }}
+                                {% else %}{{ log.lang }}{% endif %}
+                            </div>
+                            <div class="col text-end">
+                                {% if for_dev == 'All' %}{{ log.lang }}
+                                    {% else %}{{ log.duration }} min{% endif %}
+                            </div>
                         </div>
-                        <div class="col text-end">
-                            {% if for_dev == 'All' %}{{ log.lang }}
-                            {% else %}{{ log.duration }} min{% endif %}
-                        </div>
-                    </div>
-                </button>
-                <div class="collapse" id="{{ log.log_id }}" data-bs-parent="#myGroup">
-                    <div class="card card-body">
-                        {{ log.note }}
+                    </button>
+                    <div class="collapse" id="{{ log.log_id }}" data-bs-parent="#myGroup">
+                        {% include '_single_log.html' %}
                     </div>
                 </div>
             {% endfor %}
-
         </div>
-
     </div>
 </div>
 

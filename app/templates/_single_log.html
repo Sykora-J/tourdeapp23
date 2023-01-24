@@ -1,0 +1,23 @@
+<div class="card">
+    <div class="card-header">
+        <div class="row">
+            <div class="col text-start">
+                {{ log.lang }}
+            </div>
+            <div class="col text-end">
+                {{ log.duration }} min
+            </div>
+        </div>
+        <div>
+            {% for i in range(1, 6) %}
+                {% if i<= log.rating %}<i class="bi bi-star-fill"></i>
+                {% else %}<i class="bi bi-star"></i>{% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="text-start">
+            {{ log.note }}
+        </div>
+    </div>
+</div>
