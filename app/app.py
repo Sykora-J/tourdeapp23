@@ -96,6 +96,12 @@ def log_form():  # put application's code here
     return render_template('_log_form.html', devs=devs, langs=langs, log=log)
 
 
+@app.route('/delete_log/<int:log_id>')
+def log_delete(log_id):
+    db.delete_log(log_id)
+    return redirect('/')
+
+
 @app.route('/dev/delete_log/<int:log_id>')
 def dev_log_delete(log_id):
     log = db.select_one_log(log_id)
