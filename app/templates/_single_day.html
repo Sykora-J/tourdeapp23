@@ -9,7 +9,7 @@
             <h4 class="card-title">{{ single_date.work_date }}</h4>
             {% for log in single_date.logs %}
                 <div class="{{ log.lang_css() }}">
-                    <button class="btn btn-info w-100" type="button" data-bs-toggle="collapse"
+                    <button class="btn btn-{% match log.lang  %} w-100" type="button" data-bs-toggle="collapse"
                             data-bs-target="#{{ log.log_id }}"
                             aria-expanded="false" aria-controls="{{ log.log_id }}">
                         <div class="row">
