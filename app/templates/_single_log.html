@@ -15,9 +15,11 @@
             {% endfor %}
         </div>
     </div>
-    <div class="card-body">
-        <div class="text-start">
-            {{ log.note }}
+    {% if log.note != '' %}
+        <div class="card-body">
+            <div class="text-start">
+                {{ log.note }}
+            </div>
         </div>
-    </div>
+    {% endif %}
 </div>

@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS developer (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  name TEXT NOT NULL
+  name TEXT NOT NULL UNIQUE
 );
 INSERT INTO developer (name) values ('John');
 CREATE TABLE IF NOT EXISTS devlog (

@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask
+from flask import Flask, abort
 from flask import render_template
 from flask import redirect
 from flask import request
@@ -51,12 +51,9 @@ def dev_delete(developer_id):
     return redirect('/devs')
 
 
-@app.route('/devs', methods=['POST', 'GET'])
+@app.route('/devs')
 def dev_form():  # put application's code here
     devs = db.select_all_devs()
-    if request.method == 'POST':
-        new_name = request.form.get('new_name', type=str)
-        db.insert_dev(new_name)
     return render_template('dev_form.html', devs=devs)
 
 
@@ -65,7 +62,9 @@ def dev_insert():  # put application's code here
     if request.method == 'POST':
         new_name = request.form.get('new_name', type=str)
         if new_name != '':
-            db.insert_dev(new_name)
+            result = db.insert_dev(new_name)
+            if result == 'Error':
+                abort(400, 'Name already exists.')
     return redirect('/devs')
 
 
@@ -73,7 +72,9 @@ def dev_insert():  # put application's code here
 def dev_edit(developer_id):  # put application's code here
     if request.method == 'POST':
         new_name = request.form.get('new_name', type=str)
-        db.update_dev(developer_id, new_name)
+        result = db.update_dev(developer_id, new_name)
+        if result == 'Error':
+            abort(400, 'Name already exists.')
     return redirect('/devs')
 
 
@@ -89,11 +90,21 @@ def log_form():  # put application's code here
         duration = request.form.get('duration', type=int)
         rating = request.form.get('rating', type=int)
         note = request.form.get('note', type=str)
-        db.insert_log(name, work_date, lang, duration, rating, note)
-    return render_template('log_form.html', devs=devs, langs=langs, log=log)
+        result = db.insert_log(name, work_date, lang, duration, rating, note)
+        if result == 'Error':
+            abort(400, 'Developer does not exist.')
+    return render_template('_log_form.html', devs=devs, langs=langs, log=log)
 
 
-@app.route('/edit/<log_id>', methods=['POST', 'GET'])
+@app.route('/dev/delete_log/<int:log_id>')
+def dev_log_delete(log_id):
+    log = db.select_one_log(log_id)
+    dev_id = log['developer_id']
+    db.delete_log(log_id)
+    return redirect('/dev/' + str(dev_id))
+
+
+@app.route('/edit/<int:log_id>', methods=['POST', 'GET'])
 def log_update(log_id):
     langs = db.list_langs()
     devs = db.select_all_devs()
@@ -105,8 +116,10 @@ def log_update(log_id):
         duration = request.form.get('duration', type=int)
         rating = request.form.get('rating', type=int)
         note = request.form.get('note', type=str)
-        db.update_log(log_id, name, work_date, lang, duration, rating, note)
-    return render_template('log_form.html', devs=devs, langs=langs, log=log)
+        result = db.update_log(log_id, name, work_date, lang, duration, rating, note)
+        if result == 'Error':
+            abort(400, 'Developer or log does not exist.')
+    return render_template('_log_form.html', devs=devs, langs=langs, log=log)
 
 
 if __name__ == '__main__':

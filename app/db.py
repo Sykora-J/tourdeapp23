@@ -91,7 +91,7 @@ def select_one_log(log_id):
     cur = get_db().execute('select * from devlog where id=? limit 1', (log_id,))
     row = cur.fetchone()
     cur.close()
-    return row
+    return row  # TODO ošetřit v app.py
 
 
 # TODO insert_dev ERROR - same name
@@ -111,9 +111,12 @@ def select_all_devs():
 
 def insert_log(name, work_date, lang, duration, rating, note):
     dev_id = dev_name_to_id(name)
+    if dev_id is None:
+        return 'Error'
     get_db().execute('insert into devlog (work_date, lang, duration, rating, note, developer_id) values (?,?,?,?,?,?)',
                      (work_date, lang, duration, rating, note, dev_id))
     get_db().commit()
+    return 'OK'
 
 
 def delete_log(log_id):
@@ -123,32 +126,49 @@ def delete_log(log_id):
 
 def update_log(log_id, name, work_date, lang, duration, rating, note):
     developer_id = dev_name_to_id(name)
-    get_db().execute('update devlog set work_date=?, lang=?, duration=?, rating=?, note=?, developer_id=?  where id=?',
-                     (work_date, lang, duration, rating, note, developer_id, log_id))
+    if developer_id is None:
+        return 'Error'
+    try:
+        get_db().execute(
+            'update devlog set work_date=?, lang=?, duration=?, rating=?, note=?, developer_id=?  where id=?',
+            (work_date, lang, duration, rating, note, developer_id, log_id))
+    except sqlite3.Error as e:
+        return 'Error'
     get_db().commit()
+    return 'OK'
 
 
 def insert_dev(new_name):
-    get_db().execute('insert into developer (name) values (?)', (new_name,))
+    name = new_name.strip()
+    try:
+        get_db().execute('insert into developer (name) values (?)', (name,))
+    except sqlite3.Error as e:
+        return 'Error'
     get_db().commit()
+    return 'OK'
 
 
 def delete_dev(dev_id):
     get_db().execute('delete from developer where id=?', (dev_id,))
-    get_db().commit()
     get_db().execute('delete from devlog where developer_id=?', (dev_id,))
     get_db().commit()
 
 
 def update_dev(dev_id, new_name):
-    get_db().execute('update developer set name=?  where id=?', (new_name, dev_id))
+    try:
+        get_db().execute('update developer set name=?  where id=?', (new_name, dev_id))
+    except sqlite3.Error as e:
+        return 'Error'
     get_db().commit()
+    return 'OK'
 
 
 def dev_id_to_name(dev_id):
     cur = get_db().execute('select name from developer where id=? limit 1', (dev_id,))
     row = cur.fetchone()
     cur.close()
+    if row is None:
+        return None
     name = row['name']
     return name
 
@@ -157,6 +177,8 @@ def dev_name_to_id(name):
     cur = get_db().execute('select id from developer where name=? limit 1', (name,))
     row = cur.fetchone()
     cur.close()
+    if row is None:
+        return None
     dev_id = row['id']
     return dev_id
 
