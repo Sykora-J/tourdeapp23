@@ -1,24 +1,31 @@
-<div class="modal fade" id="NewLog" tabindex="-1" aria-labelledby="NewLogLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form action="new/{{ for_dev }}" method=post>
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="NewLogLabel">New log</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    {% include '_head.html' %}
+</head>
+<body>
+<header>{% include '_header.html' %}</header>
+<section class="section content">
+    <div class="container">
+        <div class="card mt-4">
+            <form action="/edit/{{ log.id }}" method=post>
+                <div class="card-header">
+                    <h1 class="card-title fs-5" id="NewLogLabel">Edit log</h1>
                 </div>
-                <div class="modal-body">
+                <div class="card-body">
                     <div>
                         <label class="form-label" for="dev">Who did the work?</label>
                         <select class="form-select" id="dev" name="dev" required>
                             {% for dev in devs %}
                                 <option value="{{ dev.name }}"
-                                        {% if log.dev_id == dev.id %}selected{% else %}{% endif %}>{{ dev.name }}</option>
+                                        {% if log.developer_id == dev.id %}selected{% endif %}>{{ dev.name }}</option>
                             {% endfor %}
                         </select>
                     </div>
                     <div>
                         <label class="form-label" for="work_date">Date:</label>
-                        <input class="form-control" type="date" id="work_date" name="work_date" value="{{ log.work_date }}" required>
+                        <input class="form-control" type="date" id="work_date" name="work_date"
+                               value="{{ log.work_date }}" required>
                     </div>
                     <div>
                         <label class="form-label" for="lang">What language?</label>
@@ -48,11 +55,17 @@
                         <input class="form-control" type="text" id="note" name="note" value="{{ log.note }}">
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <input type="submit" class="btn btn-dark" value="Create log">
+                <div class="card-footer text-end">
+                    <a class="btn btn-secondary" href="/">Close</a>
+                    <input type="submit" class="btn btn-dark" value="Edit log">
                 </div>
             </form>
         </div>
     </div>
-</div>
+</section>
+<footer class="text-center text-white">{% include '_footer.html' %}</footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+        crossorigin="anonymous"></script>
+</body>
+</html>
