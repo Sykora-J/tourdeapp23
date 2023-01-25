@@ -184,7 +184,7 @@ def dev_name_to_id(name):
 
 
 def list_langs():
-    langs = ['Python', 'Java', 'C++', 'bruh']
+    langs = ['Python', 'Java', 'C++', 'Pascal', 'HTML:o)', 'Javascript']
     return langs
 
 

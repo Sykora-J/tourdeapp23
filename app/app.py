@@ -28,7 +28,8 @@ def all_log_list():  # put application's code here
     devs = db.select_all_devs()
     log = []
     langs = db.list_langs()
-    return render_template('log_list.html', all_logs=all_logs, devs=devs, for_dev=for_dev, log=log, langs=langs)
+    dev_id = 'All'
+    return render_template('log_list.html', all_logs=all_logs, devs=devs, for_dev=for_dev, log=log, langs=langs, dev_id=dev_id)
 
 
 @app.route('/test/<int:developer_id>')
@@ -45,7 +46,8 @@ def dev_log_list(developer_id):  # put application's code here
     dev_logs = db.select_dev_logs(developer_id)
     devs = db.select_all_devs()
     log = []
-    return render_template('log_list.html', all_logs=dev_logs, devs=devs, for_dev=for_dev, log=log)
+    langs = db.list_langs()
+    return render_template('log_list.html', all_logs=dev_logs, devs=devs, for_dev=for_dev, log=log, langs=langs, dev_id=developer_id)
 
 
 @app.route('/delete_dev/<int:developer_id>')
@@ -59,8 +61,8 @@ def dev_form():  # put application's code here
     devs = db.select_all_devs()
     log = []
     langs = db.list_langs()
-    for_dev = 'All'
-    return render_template('dev_form.html', devs=devs, log=log, langs=langs, for_dev=for_dev)
+    dev_id = 'All'
+    return render_template('dev_form.html', devs=devs, log=log, langs=langs, dev_id=dev_id)
 
 
 @app.route('/create_dev', methods=['POST', 'GET'])

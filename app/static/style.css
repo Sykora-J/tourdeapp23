@@ -22,21 +22,3 @@ footer {
 .col a{
     color: inherit;
 }
-
-.python{
-    color: darkred;
-}
-
-.java{
-    color:darkblue ;
-}
-
-.java .single-log{
-    background-color: lightblue;
-}
-
-.single-log{
-    height: 50px;
-    border: 3px solid;
-    border-radius: 5px;
-}
