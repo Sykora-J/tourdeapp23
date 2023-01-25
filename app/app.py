@@ -32,14 +32,6 @@ def all_log_list():  # put application's code here
     return render_template('log_list.html', all_logs=all_logs, devs=devs, for_dev=for_dev, log=log, langs=langs, dev_id=dev_id)
 
 
-@app.route('/test/<int:developer_id>')
-def dev_update(developer_id):  # put application's code here
-    developer_id = 1
-    new_name = 'penis'
-    db.update_dev(developer_id, new_name)
-    return redirect('/devs')
-
-
 @app.route('/dev/<int:developer_id>')
 def dev_log_list(developer_id):  # put application's code here
     for_dev = db.dev_id_to_name(developer_id)
