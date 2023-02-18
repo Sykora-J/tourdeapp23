@@ -8,15 +8,6 @@
                 </div>
                 <div class="modal-body">
                     <div>
-                        <label class="form-label" for="dev">Who did the work?</label>
-                        <select class="form-select" id="dev" name="dev" required>
-                            {% for dev in devs %}
-                                <option value="{{ dev.name }}"
-                                        {% if log.dev_id == dev.id %}selected{% else %}{% endif %}>{{ dev.name }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div>
                         <label class="form-label" for="work_date">Date:</label>
                         <input class="form-control" type="date" id="work_date" name="work_date" value="{{ log.work_date }}" required>
                     </div>

@@ -7,21 +7,9 @@
   <header> {% include '_header.html' %}</header>
   <section class="section content">
       <div class="container">
-          <div class="dropdown-center text-center m-3">
-              <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="true">
-                  {{ for_dev }}
-            </a>
-            <ul class="dropdown-menu">
-                {% for dev in devs %}
-                <li><a class="dropdown-item" href="/dev/{{ dev.dev_id }}">{{ dev.name }}</a></li>
-                {% endfor %}
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="/">All</a></li>
-            </ul>
-          </div>
         <div class="container text-center" id="myGroup">
             <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xxl-4 g-2 g-lg-3">
-                {% for single_date in all_logs %}
+                {% for single_date in dev_logs %}
                     {% include '_single_day.html' %}
                 {% endfor %}
             </div>

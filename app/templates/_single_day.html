@@ -21,12 +21,10 @@
                             aria-expanded="false" aria-controls="{{ log.log_id }}">
                         <div class="row">
                             <div class="col text-start">
-                                {% if for_dev == 'All' %}{{ log.developer_name }}
-                                {% else %}{{ log.lang }}{% endif %}
+                                {{ log.lang }}
                             </div>
                             <div class="col text-end">
-                                {% if for_dev == 'All' %}{{ log.lang }}
-                                    {% else %}{{ log.duration }} min{% endif %}
+                                {{ log.duration }} min
                             </div>
                         </div>
                     </button>

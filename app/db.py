@@ -56,19 +56,32 @@ def query_db(query, args=(), one=False):
     return (rv[0] if rv else None) if one else rv
 
 
-def select_all_logs():
-    rows = query_db(
-        'select * from devlog dl join developer d on dl.developer_id = d.id order by work_date desc, dl.id desc')
-    all_logs = []
-    last_date = ''
-    for row in rows:
-        if last_date != row['work_date']:
-            date = SingleDate(row['work_date'])
-            all_logs.append(date)
-            last_date = row['work_date']
-        date.add_log(row['id'], row['work_date'], row['lang'], row['duration'], row['rating'], row['note'],
-                     row['name'])
-    return all_logs
+def user_auth(mail_or_username, password):
+    # authenticates the user. If not authenticated returns an error else returns username and if admin
+    cur = get_db().execute('select username from developer where username=? limit 1', (mail_or_username,))
+    username = cur.fetchone()
+    cur.close()
+    if username is None:
+        cur = get_db().execute('select username from developer where mail=? limit 1', (mail_or_username,))
+        username = cur.fetchone()
+        cur.close()
+    if username is None:
+        return "User not found"
+    username = str(username[0])
+    cur = get_db().execute('select password from developer where username=? limit 1', (username,))
+    db_password = cur.fetchone()[0]
+    print(db_password)
+    cur.close()
+    if db_password == password:
+        cur = get_db().execute('select bool_admin from developer where username=? limit 1', (username,))
+        admin = bool(cur.fetchone()[0])
+        cur.close()
+        cur = get_db().execute('select id from developer where username=? limit 1', (username,))
+        user_id = int(cur.fetchone()[0])
+        cur.close()
+        user = User(user_id, username, admin)
+        return user
+    return "Invalid password"
 
 
 def select_dev_logs(developer_id):
@@ -82,8 +95,7 @@ def select_dev_logs(developer_id):
             date = SingleDate(row['work_date'])
             dev_logs.append(date)
             last_date = row['work_date']
-        date.add_log(row['id'], row['work_date'], row['lang'], row['duration'], row['rating'], row['note'],
-                     row['name'])
+        date.add_log(row['id'], row['work_date'], row['lang'], row['duration'], row['rating'], row['note'])
     return dev_logs
 
 
@@ -101,11 +113,12 @@ def select_one_log(log_id):
 # TODO update_log half done
 # TODO update_dev
 
-def select_all_devs():
-    rows = query_db('select * from developer order by name')
+def select_all_users():
+    rows = query_db('select * from developer order by username')
     devs = []
     for row in rows:
-        devs.append(SingleDev(row['id'], row['name']))
+        devs.append(CompleteUser(row['id'], row['fname'], row['lname'],
+                                 row['username'], row['mail'], row['password'], bool(row['bool_admin'])))
     return devs  # devs is a list containing name and dev_id
 
 
@@ -141,7 +154,7 @@ def update_log(log_id, name, work_date, lang, duration, rating, note):
 def insert_dev(new_name):
     name = new_name.strip()
     try:
-        get_db().execute('insert into developer (name) values (?)', (name,))
+        get_db().execute('insert into developer (username) values (?)', (name,))
     except sqlite3.Error as e:
         return 'Error'
     get_db().commit()
@@ -156,7 +169,7 @@ def delete_dev(dev_id):
 
 def update_dev(dev_id, new_name):
     try:
-        get_db().execute('update developer set name=?  where id=?', (new_name, dev_id))
+        get_db().execute('update developer set username=?  where id=?', (new_name, dev_id))
     except sqlite3.Error as e:
         return 'Error'
     get_db().commit()
@@ -164,17 +177,17 @@ def update_dev(dev_id, new_name):
 
 
 def dev_id_to_name(dev_id):
-    cur = get_db().execute('select name from developer where id=? limit 1', (dev_id,))
+    cur = get_db().execute('select username from developer where id=? limit 1', (dev_id,))
     row = cur.fetchone()
     cur.close()
     if row is None:
         return None
-    name = row['name']
+    name = row['username']
     return name
 
 
 def dev_name_to_id(name):
-    cur = get_db().execute('select id from developer where name=? limit 1', (name,))
+    cur = get_db().execute('select id from developer where username=? limit 1', (name,))
     row = cur.fetchone()
     cur.close()
     if row is None:
@@ -188,21 +201,32 @@ def list_langs():
     return langs
 
 
-class SingleDev:
-    def __init__(self, dev_id, name):
-        self.dev_id = dev_id
-        self.name = name
+class User:
+    def __init__(self, user_id, username, admin):
+        self.user_id = user_id
+        self.username = username
+        self.admin = admin
+
+
+class CompleteUser:
+    def __init__(self, user_id, fname, lname, username, mail, password, bool_admin):
+        self.user_id = user_id
+        self.fname = fname
+        self.lname = lname
+        self.username = username
+        self.mail = mail
+        self.password = password
+        self.bool_admin = bool_admin
 
 
 class SingleLog:
-    def __init__(self, log_id, work_date, lang, duration, rating, note, developer_name):
+    def __init__(self, log_id, work_date, lang, duration, rating, note):
         self.log_id = log_id
         self.work_date = work_date
         self.lang = lang
         self.duration = duration
         self.rating = rating
         self.note = note
-        self.developer_name = developer_name
 
     def lang_css(self):
         lower_lang = self.lang.lower()
@@ -214,6 +238,6 @@ class SingleDate:
         self.work_date = work_date
         self.logs = []
 
-    def add_log(self, log_id, work_date, lang, duration, rating, note, developer_name):
-        self.logs.append(SingleLog(log_id, work_date, lang, duration, rating, note, developer_name))
+    def add_log(self, log_id, work_date, lang, duration, rating, note):
+        self.logs.append(SingleLog(log_id, work_date, lang, duration, rating, note))
         return self.logs

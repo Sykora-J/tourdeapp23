@@ -4,9 +4,12 @@ from flask import Flask, abort
 from flask import render_template
 from flask import redirect
 from flask import request
+from flask import session
 from . import db
 
 app = Flask(__name__)
+app.secret_key = b'f01790380dc11025fcc4c8008d127a3b9da5f20199ce85efbd4bab36f68bd43d'
+
 
 app.config.from_mapping(
     DATABASE=os.path.join(app.instance_path, 'tourdeflask.sqlite'),
@@ -21,25 +24,30 @@ except OSError:
 db.init_app(app)
 
 
-@app.route('/')
+@app.route('/', methods=['POST', 'GET'])
 def all_log_list():  # put application's code here
-    for_dev = request.args.get('dev', 'All')
-    all_logs = db.select_all_logs()
-    devs = db.select_all_devs()
-    log = []
-    langs = db.list_langs()
-    dev_id = 'All'
-    return render_template('log_list.html', all_logs=all_logs, devs=devs, for_dev=for_dev, log=log, langs=langs, dev_id=dev_id)
+    if request.method == 'POST':
+        user_or_mail = request.form.get('user_or_mail', type=str)
+        password = request.form.get('password', type=str)
+        user = db.user_auth(user_or_mail, password)
+        if type(user) is db.User:
+            session["user_id"] = user.user_id
+            session["username"] = user.username
+            session["admin"] = user.admin
+        else:
+            abort(400, user)
+    if 'user_id' in session:
+        print(session['user_id'])
+        dev_logs = db.select_dev_logs(session["user_id"])
+        log = []
+        langs = db.list_langs()
+        return render_template('log_list.html', dev_logs=dev_logs, log=log, langs=langs)
+    return redirect('/login')
 
 
-@app.route('/dev/<int:developer_id>')
-def dev_log_list(developer_id):  # put application's code here
-    for_dev = db.dev_id_to_name(developer_id)
-    dev_logs = db.select_dev_logs(developer_id)
-    devs = db.select_all_devs()
-    log = []
-    langs = db.list_langs()
-    return render_template('log_list.html', all_logs=dev_logs, devs=devs, for_dev=for_dev, log=log, langs=langs, dev_id=developer_id)
+@app.route('/login')
+def login():
+    return render_template('login.html')
 
 
 @app.route('/delete_dev/<int:developer_id>')
@@ -50,11 +58,12 @@ def dev_delete(developer_id):
 
 @app.route('/devs')
 def dev_form():  # put application's code here
-    devs = db.select_all_devs()
+    if not session['admin']:
+        return redirect('/')
+    devs = db.select_all_users()
     log = []
     langs = db.list_langs()
-    dev_id = 'All'
-    return render_template('dev_form.html', devs=devs, log=log, langs=langs, dev_id=dev_id)
+    return render_template('dev_list.html', devs=devs, log=log, langs=langs)
 
 
 @app.route('/create_dev', methods=['POST', 'GET'])
@@ -125,7 +134,7 @@ def dev_log_delete(log_id):
 @app.route('/edit_log/<int:log_id>')
 def log_update_form(log_id):
     langs = db.list_langs()
-    devs = db.select_all_devs()
+    devs = db.select_all_users()
     log = db.select_one_log(log_id)
     return render_template('edit_log_form.html', devs=devs, langs=langs, log=log)
 
