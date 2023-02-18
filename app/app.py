@@ -50,6 +50,15 @@ def login():
     return render_template('login.html')
 
 
+@app.route('/logout')
+def logout():
+    # remove the username from the session if it's there
+    session.pop('user_id', None)
+    session.pop('username', None)
+    session.pop('bool_admin', None)
+    return redirect('/')
+
+
 @app.route('/delete_dev/<int:developer_id>')
 def dev_delete(developer_id):
     db.delete_dev(developer_id)
