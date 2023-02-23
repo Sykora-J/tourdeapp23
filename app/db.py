@@ -94,14 +94,14 @@ def select_dev_logs(developer_id):
         'where developer_id=? order by work_date desc, dl.id desc', (developer_id,))
     dev_logs = []
     last_date = datetime.strptime('0001-01-01', "%Y-%m-%d")
-    print(last_date)
+    print(datetime.strptime('0001-01-01', "%Y-%m-%d"))
     for row in rows:
-        date = strptime(row['work_date'], "%Y-%m-%d")
+        date = datetime.strptime(row['work_date'], "%Y-%m-%d")
         if last_date != date:
-            one_date = SingleDate(date.strftime("%d-%m-%Y"))
+            one_date = SingleDate(date.strftime("%d.%m.%Y"))
             dev_logs.append(one_date)
             last_date = date
-        one_date.add_log(row['id'], date.strftime("%d-%m-%Y"), row['lang'], row['duration'], row['rating'], row['note'])
+        one_date.add_log(row['id'], date.strftime("%d.%m.%Y"), row['lang'], row['duration'], row['rating'], row['note'])
     return dev_logs
 
 
