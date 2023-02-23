@@ -185,9 +185,6 @@ def list_langs():
     return langs
 
 
-def
-
-
 def dev_id_to_name(dev_id):
     cur = get_db().execute('select username from developer where id=? limit 1', (dev_id,))
     row = cur.fetchone()
