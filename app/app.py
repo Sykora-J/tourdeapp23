@@ -39,15 +39,34 @@ def all_log_list():  # put application's code here
     if 'user_id' in session:
         print(session['user_id'])
         dev_logs = db.select_dev_logs(session["user_id"])
+        admin = session["admin"]
         log = []
         langs = db.list_langs()
-        return render_template('log_list.html', dev_logs=dev_logs, log=log, langs=langs)
+        return render_template('log_list.html', dev_logs=dev_logs, log=log, langs=langs, admin=admin)
     return redirect('/login')
 
 
 @app.route('/login')
 def login():
     return render_template('login.html')
+
+
+@app.route('/devs')
+def dev_form():  # put application's code here
+    if not session['admin']:
+        return redirect('/')
+    devs = db.select_all_users()
+    log = []
+    langs = db.list_langs()
+    return render_template('dev_list.html', devs=devs, log=log, langs=langs)
+
+
+@app.route('/edit_log/<int:log_id>')
+def log_update_form(log_id):
+    langs = db.list_langs()
+    devs = db.select_all_users()
+    log = db.select_one_log(log_id)
+    return render_template('edit_log_form.html', devs=devs, langs=langs, log=log)
 
 
 @app.route('/logout')
@@ -63,16 +82,6 @@ def logout():
 def dev_delete(developer_id):
     db.delete_dev(developer_id)
     return redirect('/devs')
-
-
-@app.route('/devs')
-def dev_form():  # put application's code here
-    if not session['admin']:
-        return redirect('/')
-    devs = db.select_all_users()
-    log = []
-    langs = db.list_langs()
-    return render_template('dev_list.html', devs=devs, log=log, langs=langs)
 
 
 @app.route('/create_dev', methods=['POST', 'GET'])
@@ -138,14 +147,6 @@ def dev_log_delete(log_id):
     dev_id = log['developer_id']
     db.delete_log(log_id)
     return redirect('/dev/' + str(dev_id))
-
-
-@app.route('/edit_log/<int:log_id>')
-def log_update_form(log_id):
-    langs = db.list_langs()
-    devs = db.select_all_users()
-    log = db.select_one_log(log_id)
-    return render_template('edit_log_form.html', devs=devs, langs=langs, log=log)
 
 
 @app.route('/edit/<int:log_id>', methods=['POST', 'GET'])

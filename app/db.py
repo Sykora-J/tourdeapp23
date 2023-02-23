@@ -1,9 +1,12 @@
+from time import strptime
+
 import click
 from flask import current_app, g
 from flask.cli import with_appcontext
 
 import sqlite3
 import re
+import bcrypt
 
 
 def get_db():
@@ -89,13 +92,14 @@ def select_dev_logs(developer_id):
         'select * from devlog dl join developer d on dl.developer_id = d.id '
         'where developer_id=? order by work_date desc, dl.id desc', (developer_id,))
     dev_logs = []
-    last_date = '0000-00-00'
+    last_date = strptime('0000-00-00', "%Y-%m-%d")
     for row in rows:
-        if last_date != row['work_date']:
-            date = SingleDate(row['work_date'])
-            dev_logs.append(date)
-            last_date = row['work_date']
-        date.add_log(row['id'], row['work_date'], row['lang'], row['duration'], row['rating'], row['note'])
+        date = strptime(row['work_date'], "%Y-%m-%d")
+        if last_date != date:
+            one_date = SingleDate(date)
+            dev_logs.append(one_date)
+            last_date = date
+        one_date.add_log(row['id'], date, row['lang'], row['duration'], row['rating'], row['note'])
     return dev_logs
 
 
@@ -176,6 +180,14 @@ def update_dev(dev_id, new_name):
     return 'OK'
 
 
+def list_langs():
+    langs = ['Python', 'Java', 'C++', 'Pascal', 'HTML:o)', 'Javascript']
+    return langs
+
+
+def
+
+
 def dev_id_to_name(dev_id):
     cur = get_db().execute('select username from developer where id=? limit 1', (dev_id,))
     row = cur.fetchone()
@@ -194,11 +206,6 @@ def dev_name_to_id(name):
         return None
     dev_id = row['id']
     return dev_id
-
-
-def list_langs():
-    langs = ['Python', 'Java', 'C++', 'Pascal', 'HTML:o)', 'Javascript']
-    return langs
 
 
 class User:
