@@ -1,3 +1,4 @@
+from datetime import datetime
 from time import strptime
 
 import click
@@ -92,14 +93,15 @@ def select_dev_logs(developer_id):
         'select * from devlog dl join developer d on dl.developer_id = d.id '
         'where developer_id=? order by work_date desc, dl.id desc', (developer_id,))
     dev_logs = []
-    last_date = strptime('0000-00-00', "%Y-%m-%d")
+    last_date = datetime.strptime('0001-01-01', "%Y-%m-%d")
+    print(last_date)
     for row in rows:
         date = strptime(row['work_date'], "%Y-%m-%d")
         if last_date != date:
-            one_date = SingleDate(date)
+            one_date = SingleDate(date.strftime("%d-%m-%Y"))
             dev_logs.append(one_date)
             last_date = date
-        one_date.add_log(row['id'], date, row['lang'], row['duration'], row['rating'], row['note'])
+        one_date.add_log(row['id'], date.strftime("%d-%m-%Y"), row['lang'], row['duration'], row['rating'], row['note'])
     return dev_logs
 
 
