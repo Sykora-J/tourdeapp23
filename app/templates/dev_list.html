@@ -21,29 +21,31 @@
                     </li>
                     {% for dev in devs %}
                         <li class="list-group-item text-end">
-                            {{ dev.name }}
-                            <a class="btn btn-light ms-4" href="/delete_dev/{{ dev.dev_id }}"><i
+                            {{ dev.username }}
+                            {% if user_id != dev.user_id %}
+                            <a class="btn btn-light ms-4" href="/delete_dev/{{ dev.user_id }}"><i
                                     class="bi bi-trash3-fill"></i></a>
+                            {% endif %}
                             <button type="button" class="btn btn-light" data-bs-toggle="modal"
-                                    data-bs-target="#edit_{{ dev.dev_id }}">
+                                    data-bs-target="#edit_{{ dev.user_id }}">
                                 <i class="bi bi-pencil-square"></i>
                             </button>
-                            <div class="modal fade" id="edit_{{ dev.dev_id }}" tabindex="-1"
-                                 aria-labelledby="{{ dev.dev_id }}_label"
+                            <div class="modal fade" id="edit_{{ dev.user_id }}" tabindex="-1"
+                                 aria-labelledby="{{ dev.user_id }}_label"
                                  aria-hidden="true">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h1 class="modal-title fs-5" id="{{ dev.dev_id }}_label">Change name</h1>
+                                            <h1 class="modal-title fs-5" id="{{ dev.user_id }}_label">Change name</h1>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                     aria-label="Close"></button>
                                         </div>
-                                        <form action="/edit_dev/{{ dev.dev_id }}" method="post">
+                                        <form action="/edit_dev/{{ dev.user_id }}" method="post">
                                             <div class="modal-body">
                                                 <div class="input-group">
                                                 <span class="input-group-text" id="basic-addon2">New name:</span>
                                                 <input type="text" class="form-control" id="new_name" name="new_name" maxlength="20"
-                                                       value="{{ dev.name }}">
+                                                       value="{{ dev.username }}">
                                                 </div>
                                             </div>
                                             <div class="modal-footer">

@@ -94,7 +94,6 @@ def select_dev_logs(developer_id):
         'where developer_id=? order by work_date desc, dl.id desc', (developer_id,))
     dev_logs = []
     last_date = datetime.strptime('0001-01-01', "%Y-%m-%d")
-    print(datetime.strptime('0001-01-01', "%Y-%m-%d"))
     for row in rows:
         date = datetime.strptime(row['work_date'], "%Y-%m-%d")
         if last_date != date:
@@ -125,11 +124,10 @@ def select_all_users():
     for row in rows:
         devs.append(CompleteUser(row['id'], row['fname'], row['lname'],
                                  row['username'], row['mail'], row['password'], bool(row['bool_admin'])))
-    return devs  # devs is a list containing name and dev_id
+    return devs  # devs is a list containing CompleteUsers
 
 
-def insert_log(name, work_date, lang, duration, rating, note):
-    dev_id = dev_name_to_id(name)
+def insert_log(dev_id, work_date, lang, duration, rating, note):
     if dev_id is None:
         return 'Error'
     get_db().execute('insert into devlog (work_date, lang, duration, rating, note, developer_id) values (?,?,?,?,?,?)',
@@ -138,37 +136,50 @@ def insert_log(name, work_date, lang, duration, rating, note):
     return 'OK'
 
 
-def delete_log(log_id):
-    get_db().execute('delete from devlog where id=?', (log_id,))
-    get_db().commit()
+def delete_log(log_id, user_id):
+    cur = get_db().execute('select developer_id from devlog where id=? limit 1', (log_id,))
+    row = cur.fetchone()
+    cur.close()
+    if row is None:
+        return "Error - Log doesn't exist"
+    if row['developer_id'] == user_id:
+        get_db().execute('delete from devlog where id=?', (log_id,))
+        get_db().commit()
+        return "OK"
+    return "Error - no permission"
 
 
-def update_log(log_id, name, work_date, lang, duration, rating, note):
-    developer_id = dev_name_to_id(name)
-    if developer_id is None:
-        return 'Error'
+def update_log(log_id, dev_id, work_date, lang, duration, rating, note):
+    cur = get_db().execute('select developer_id from devlog where id=? limit 1', (log_id,))
+    row = cur.fetchone()
+    cur.close()
+    if row is None:
+        return "Error - Log doesn't exist"
+    if row['developer_id'] == dev_id:
+        try:
+            get_db().execute(
+                'update devlog set work_date=?, lang=?, duration=?, rating=?, note=?, developer_id=?  where id=?',
+                (work_date, lang, duration, rating, note, dev_id, log_id))
+        except sqlite3.Error as e:
+            return 'Error - Database error'
+        get_db().commit()
+        return 'OK'
+    return "Error - no permission"
+
+
+def insert_dev(fname, lname, username, mail, password, bool_admin):
     try:
-        get_db().execute(
-            'update devlog set work_date=?, lang=?, duration=?, rating=?, note=?, developer_id=?  where id=?',
-            (work_date, lang, duration, rating, note, developer_id, log_id))
+        get_db().execute('insert into developer (fname, lname, username, mail, password, bool_admin) values (?,?,?,?,?,?)',
+                         (fname, lname, username, mail, password, bool_admin))
     except sqlite3.Error as e:
-        return 'Error'
-    get_db().commit()
-    return 'OK'
-
-
-def insert_dev(new_name):
-    name = new_name.strip()
-    try:
-        get_db().execute('insert into developer (username) values (?)', (name,))
-    except sqlite3.Error as e:
-        return 'Error'
+        return 'Error - username or mail already exists'
     get_db().commit()
     return 'OK'
 
 
 def delete_dev(dev_id):
     get_db().execute('delete from developer where id=?', (dev_id,))
+    get_db().commit()
     get_db().execute('delete from devlog where developer_id=?', (dev_id,))
     get_db().commit()
 
