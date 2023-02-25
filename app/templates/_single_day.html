@@ -15,7 +15,8 @@
                                      {% elif log.lang == 'C++' %}btn-success
                                      {% elif log.lang == 'Pascal' %}btn-primary
                                      {% elif log.lang == 'HTML:o)' %}btn-secondary
-                                     {% else %}btn-warning{% endif %}
+                                     {% elif log.lang == 'Javascript' %}btn-warning
+                                     {% else %}btn-dark{% endif %}
                                      w-100 mt-1 mb-1" type="button" data-bs-toggle="collapse"
                             data-bs-target="#{{ log.log_id }}"
                             aria-expanded="false" aria-controls="{{ log.log_id }}">

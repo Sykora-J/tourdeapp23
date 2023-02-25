@@ -9,14 +9,13 @@
                 <div class="modal-body">
                     <div>
                         <label class="form-label" for="work_date">Date:</label>
-                        <input class="form-control" type="date" id="work_date" name="work_date" value="{{ log.work_date }}" required>
+                        <input class="form-control" type="date" id="work_date" name="work_date" required>
                     </div>
                     <div>
                         <label class="form-label" for="lang">What language?</label>
                         <select class="form-select" id="lang" name="lang">
                             {% for lang in langs %}
-                                <option value="{{ lang }}"
-                                        {% if log.lang == lang %}selected{% else %}{% endif %}>{{ lang }}</option>
+                                <option value="{{ lang }}">{{ lang }}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -24,19 +23,17 @@
                         <div class="col">
                             <label class="form-label" for="duration">Duration (min):</label>
                             <input class="form-control" type="number" id="duration" name="duration" min="1" max="1440"
-                                   value="{{ log.duration }}"
                                    required>
                         </div>
                         <div class="col">
                             <label class="form-label" for="rating">Rating (between 1 and 5):</label>
                             <input class="form-control" type="number" id="rating" name="rating" min="1" max="5"
-                                   value="{{ log.rating }}"
                                    required>
                         </div>
                     </div>
                     <div>
                         <label class="form-label" for="note">Note:</label>
-                        <input class="form-control" type="text" id="note" name="note" value="{{ log.note }}">
+                        <input class="form-control" type="text" id="note" name="note">
                     </div>
                 </div>
                 <div class="modal-footer">

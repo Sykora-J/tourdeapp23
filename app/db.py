@@ -111,12 +111,15 @@ def select_one_log(log_id):
     return row  # TODO ošetřit v app.py
 
 
-# TODO insert_dev ERROR - same name
-# TODO delete_dev ERROR - already deleted
-# TODO delete_log half done
-# TODO delete_log ERROR - already deleted
-# TODO update_log half done
-# TODO update_dev
+def select_one_dev(dev_id):
+    cur = get_db().execute('select * from developer where id=? limit 1', (dev_id,))
+    row = cur.fetchone()
+    cur.close()
+    print(row)
+    if row is None:
+        row = "Error - no such developer"
+    return row  # TODO ošetřit v app.py
+
 
 def select_all_users():
     rows = query_db('select * from developer order by username')
@@ -134,6 +137,16 @@ def insert_log(dev_id, work_date, lang, duration, rating, note):
                      (work_date, lang, duration, rating, note, dev_id))
     get_db().commit()
     return 'OK'
+
+
+def last_insert_id():
+    log_id = get_db().execute('SELECT last_insert_rowid()').fetchone()[0]
+    return log_id
+
+
+# define a function to check if the uploaded file is a CSV file
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() == 'csv'
 
 
 def delete_log(log_id, user_id):
@@ -184,9 +197,11 @@ def delete_dev(dev_id):
     get_db().commit()
 
 
-def update_dev(dev_id, new_name):
+def update_dev(dev_id, fname, lname, username, mail, password, bool_admin):
     try:
-        get_db().execute('update developer set username=?  where id=?', (new_name, dev_id))
+        get_db().execute(
+            'update developer set fname=?, lname=?, username=?, mail=?, password=?, bool_admin=?  where id=?',
+            (fname, lname, username, mail, password, bool_admin, dev_id))
     except sqlite3.Error as e:
         return 'Error'
     get_db().commit()
@@ -194,28 +209,8 @@ def update_dev(dev_id, new_name):
 
 
 def list_langs():
-    langs = ['Python', 'Java', 'C++', 'Pascal', 'HTML:o)', 'Javascript']
+    langs = ['Python', 'Java', 'C++', 'Pascal', 'HTML:o)', 'Javascript', 'ChatGPT']
     return langs
-
-
-def dev_id_to_name(dev_id):
-    cur = get_db().execute('select username from developer where id=? limit 1', (dev_id,))
-    row = cur.fetchone()
-    cur.close()
-    if row is None:
-        return None
-    name = row['username']
-    return name
-
-
-def dev_name_to_id(name):
-    cur = get_db().execute('select id from developer where username=? limit 1', (name,))
-    row = cur.fetchone()
-    cur.close()
-    if row is None:
-        return None
-    dev_id = row['id']
-    return dev_id
 
 
 class User:
