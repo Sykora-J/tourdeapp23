@@ -74,7 +74,6 @@ def user_auth(mail_or_username, password):
     username = str(username[0])
     cur = get_db().execute('select password from developer where username=? limit 1', (username,))
     db_password = cur.fetchone()[0]
-    print(db_password)
     cur.close()
     if db_password == password:
         cur = get_db().execute('select bool_admin from developer where username=? limit 1', (username,))
@@ -115,7 +114,6 @@ def select_one_dev(dev_id):
     cur = get_db().execute('select * from developer where id=? limit 1', (dev_id,))
     row = cur.fetchone()
     cur.close()
-    print(row)
     if row is None:
         row = "Error - no such developer"
     return row  # TODO ošetřit v app.py

@@ -36,7 +36,6 @@ def all_log_list():  # put application's code here
         showtoast = get_flashed_messages()
         if len(showtoast) == 0:
             showtoast = None
-        print(showtoast)
         return render_template('log_list.html', dev_logs=dev_logs, log=log, langs=langs,
                                admin=admin, username=username, showtoast=showtoast)
     return redirect('/login')
