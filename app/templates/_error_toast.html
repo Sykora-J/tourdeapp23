@@ -1,0 +1,21 @@
+
+<script>
+    $(document).ready(function () {
+        // Show Bootstrap toast
+        var toast = new bootstrap.Toast(document.getElementById('myToast'));
+        toast.show();
+    });
+</script>
+
+<!-- Bootstrap toast -->
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 5">
+    <div id="myToast" class="toast align-items-center text-white bg-danger border-0" role="alert"
+         aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body">
+                {{ showtoast }}
+            </div>
+            <button type="button" class="btn-close ms-auto me-2" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+</div>

@@ -1,6 +1,6 @@
 import os
 from datetime import datetime
-from flask import Flask, abort, jsonify, make_response
+from flask import Flask, abort, jsonify, make_response, flash, get_flashed_messages
 from flask import render_template
 from flask import redirect
 from flask import request
@@ -25,8 +25,27 @@ except OSError:
 db.init_app(app)
 
 
-@app.route('/', methods=['POST', 'GET'])
+@app.route('/')
 def all_log_list():  # put application's code here
+    if 'user_id' in session:
+        dev_logs = db.select_dev_logs(session["user_id"])
+        admin = session["admin"]
+        log = []
+        langs = db.list_langs()
+        username = session['username']
+        showtoast = get_flashed_messages()
+        if len(showtoast) == 0:
+            showtoast = None
+        print(showtoast)
+        return render_template('log_list.html', dev_logs=dev_logs, log=log, langs=langs,
+                               admin=admin, username=username, showtoast=showtoast)
+    return redirect('/login')
+
+
+@app.route('/login', methods=['POST', 'GET'])
+def login():
+    error_message = None
+    user_or_mail = ''
     if request.method == 'POST':
         user_or_mail = request.form.get('user_or_mail', type=str)
         password = request.form.get('password', type=str)
@@ -35,21 +54,11 @@ def all_log_list():  # put application's code here
             session["user_id"] = user.user_id
             session["username"] = user.username
             session["admin"] = user.admin
+            return redirect('/')
         else:
-            abort(400, user)
-    if 'user_id' in session:
-        print(session['user_id'])
-        dev_logs = db.select_dev_logs(session["user_id"])
-        admin = session["admin"]
-        log = []
-        langs = db.list_langs()
-        return render_template('log_list.html', dev_logs=dev_logs, log=log, langs=langs, admin=admin)
-    return redirect('/login')
-
-
-@app.route('/login')
-def login():
-    return render_template('login.html')
+            error_message = 'Špatné přihlašovací údaje'
+    username = ""
+    return render_template('login.html', username=username, error_message=error_message, user_or_mail=user_or_mail)
 
 
 @app.route('/devs')
@@ -61,14 +70,16 @@ def dev_form():  # put application's code here
     langs = db.list_langs()
     user_id = session['user_id']
     admin = session['admin']
-    return render_template('dev_list.html', devs=devs, log=log, langs=langs, user_id=user_id, admin=admin)
+    username = session['username']
+    return render_template('dev_list.html', devs=devs, log=log, langs=langs, user_id=user_id, admin=admin, username=username)
 
 
 @app.route('/edit_log/<int:log_id>')
 def log_update_form(log_id):
     langs = db.list_langs()
     log = db.select_one_log(log_id)
-    return render_template('edit_log_form.html', langs=langs, log=log)
+    username = session['username']
+    return render_template('edit_log_form.html', langs=langs, log=log, username=username)
 
 
 @app.route('/edit_user/<int:dev_id>')
@@ -81,7 +92,8 @@ def dev_update_form(dev_id):
     if type(user) is str:
         abort(400, user)
     user_id = session["user_id"]
-    return render_template('edit_user_form.html', langs=langs, user=user, admin=admin, user_id=user_id)
+    username = session['username']
+    return render_template('edit_user_form.html', langs=langs, user=user, admin=admin, user_id=user_id, username=username)
 
 
 
@@ -167,7 +179,7 @@ def log_form():  # put application's code here
 def log_delete(log_id):
     result = db.delete_log(log_id, session['user_id'])
     if "Error" in result:
-        abort(400, result)
+        flash(result)
     return redirect('/')
 
 

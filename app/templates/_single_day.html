@@ -1,12 +1,7 @@
-{#
-<div class="col g-3 {{ log.lang_css() }}">
-    <div class="single-log"><a href="/list/{{ log.log_id }}">{{ log.work_date }} Language: {{ log.lang }}</a></div>
-</div>#}
-
 <div class="col">
     <div class="card">
         <div class="card-body">                                        {# TODO decrease padding #}
-            <h4 class="card-title">{{ single_date.work_date }}</h4>
+            <h4 class="card-title text-start">{{ single_date.work_date }}</h4>
             {% for log in single_date.logs %}
                 <div>
                     <button class="btn

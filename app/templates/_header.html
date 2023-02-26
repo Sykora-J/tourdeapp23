@@ -1,6 +1,7 @@
 <nav class="navbar navbar-dark bg-dark">
     <div class="container-fluid">
-        <a class="navbar-brand mb-0 h1" href="/">DevLog</a>
+        <a class="navbar-brand mb-0 h1" href="/">DevLog
+        {% if username != "" %} - {{ username }}{% endif %}</a>
         <div class="navbar-nav">
             <a class="nav-item nav-link btn btn-dark" href="/">
                 <svg xmlns="http://www.w3.org/2000/svg" width="50" height="25" fill="currentColor"

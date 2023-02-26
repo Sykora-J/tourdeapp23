@@ -18,23 +18,28 @@
                 <div class="card" style="border-radius: 1rem;">
                     <div class="card-body p-4 p-lg-5 text-black">
 
-                        <form action="/" method=post>
+                        <form action="/login" method=post {% if error_message %}class="was-validated"{% endif %}>
 
                             <h5 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Sign into your
                                 account</h5>
 
                             <div class="form-outline mb-4">
                                 <label class="form-label" for="user_or_mail">Username or email</label>
-                                <input type="text" id="user_or_mail" name="user_or_mail" class="form-control form-control-lg" required/>
+                                <input type="text" id="user_or_mail" name="user_or_mail"
+                                       class="form-control form-control-lg" value="{{ user_or_mail }}" required/>
                             </div>
 
                             <div class="form-outline mb-4">
                                 <label class="form-label" for="password">Password</label>
-                                <input type="password" id="password" name="password" class="form-control form-control-lg" required/>
+                                <input type="password" id="password" name="password"
+                                       class="form-control form-control-lg" required/>
+                                <div class="invalid-feedback">
+                                    {{ error_message }}
+                                </div>
                             </div>
 
                             <div class="pt-1 mb-4">
-                                <input type="submit" class="btn btn-dark btn-lg btn-block" value="Login"></input>
+                                <input type="submit" class="btn btn-dark btn-lg btn-block" value="Login">
                             </div>
                         </form>
                     </div>

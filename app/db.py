@@ -203,7 +203,7 @@ def update_dev(dev_id, fname, lname, username, mail, password, bool_admin):
             'update developer set fname=?, lname=?, username=?, mail=?, password=?, bool_admin=?  where id=?',
             (fname, lname, username, mail, password, bool_admin, dev_id))
     except sqlite3.Error as e:
-        return 'Error'
+        return 'Error - database error'
     get_db().commit()
     return 'OK'
 
