@@ -107,6 +107,8 @@ def select_one_log(log_id):
     cur = get_db().execute('select * from devlog where id=? limit 1', (log_id,))
     row = cur.fetchone()
     cur.close()
+    if row is None:
+        row = EmptyLog(log_id)
     return row  # TODO ošetřit v app.py
 
 
@@ -209,6 +211,11 @@ def update_dev(dev_id, fname, lname, username, mail, password, bool_admin):
 def list_langs():
     langs = ['Python', 'Java', 'C++', 'Pascal', 'HTML:o)', 'Javascript', 'ChatGPT']
     return langs
+
+
+class EmptyLog:
+    def __init__(self, id):
+        self.id = id
 
 
 class User:

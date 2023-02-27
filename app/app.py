@@ -70,7 +70,11 @@ def dev_form():  # put application's code here
     user_id = session['user_id']
     admin = session['admin']
     username = session['username']
-    return render_template('dev_list.html', devs=devs, log=log, langs=langs, user_id=user_id, admin=admin, username=username)
+    showtoast = get_flashed_messages()
+    if len(showtoast) == 0:
+        showtoast = None
+    return render_template('dev_list.html', devs=devs, log=log, langs=langs, user_id=user_id,
+                           admin=admin, username=username, showtoast=showtoast)
 
 
 @app.route('/edit_log/<int:log_id>')
@@ -89,7 +93,8 @@ def dev_update_form(dev_id):
     user = db.select_one_dev(dev_id)
     admin = session['admin']
     if type(user) is str:
-        abort(400, user)
+        flash(user)
+        return redirect('/')
     user_id = session["user_id"]
     username = session['username']
     return render_template('edit_user_form.html', langs=langs, user=user, admin=admin, user_id=user_id, username=username)
@@ -110,7 +115,8 @@ def dev_delete(developer_id):
     if session['admin']:
         db.delete_dev(developer_id)
         return redirect('/devs')
-    abort(400, 'Error - Invalid permission')
+    flash('Error - Invalid permission')
+    return redirect('/')
 
 
 @app.route('/new_user', methods=['POST', 'GET'])
@@ -129,9 +135,9 @@ def dev_insert():  # put application's code here
             if all([fname != "", lname != "", username != "", mail != "", password != "", ]):
                 result = db.insert_dev(fname, lname, username, mail, password, bool_admin)
                 if "Error" in result:
-                    abort(400, result)
+                    flash(result)
             else:
-                abort(400, "Error - something is missing")
+                flash("Error - something is missing")
         return redirect('/devs')
     return redirect('/')
 
@@ -149,12 +155,16 @@ def dev_edit(dev_id):  # put application's code here
                 bool_admin = 1
             else:
                 bool_admin = 0
+            if dev_id == session['user_id']:
+                bool_admin = 1
             if all([fname != "", lname != "", username != "", mail != "", password != "", ]):
                 result = db.update_dev(dev_id, fname, lname, username, mail, password, bool_admin)
                 if "Error" in result:
-                    abort(400, result)
+                    flash(result)
+                else:
+                    session['username'] = username
             else:
-                abort(400, "Error - something is missing")
+                flash("Error - something is missing")
         return redirect('/devs')
     return redirect('/')
 
@@ -170,7 +180,7 @@ def log_form():  # put application's code here
         note = request.form.get('note', type=str)
         result = db.insert_log(dev_id, work_date, lang, duration, rating, note)
         if result == 'Error':
-            abort(400, 'Developer does not exist.')
+            flash('Developer does not exist.')
     return redirect('/')
 
 
@@ -192,7 +202,7 @@ def log_update(log_id):
         note = request.form.get('note', type=str)
         result = db.update_log(log_id, session['user_id'], work_date, lang, duration, rating, note)
         if "Error" in result:
-            abort(400, result)
+            flash(result)
     return redirect('/')
 
 
@@ -201,18 +211,21 @@ def upload_logs():
     if request.method == 'POST':
         # check if the post request has the file part
         if 'file' not in request.files:
-            abort(400, "Error - no file")
+            flash("Error - no file")
+            return redirect('/')
         file = request.files['file']
         # if user does not select file, browser also submits an empty part without filename
         if file.filename == '':
-            abort(400, "Error - no file name")
+            flash("Error - no file name")
+            return redirect('/')
         if file and db.allowed_file(file.filename):
             # read the CSV file
             stream = io.StringIO(file.stream.read().decode("cp1250"), newline=None)
             reader = csv.reader(stream)
             # skip the header row
             if len(next(reader)) != 5:
-                abort(400, "Error - invalid file structure")
+                flash("Error - invalid file structure")
+                return redirect('/')
             # iterate over each row and insert the log
             for row in reader:
                 date, duration, lang, rating, note = row
@@ -230,7 +243,7 @@ def download_logs():
 
     # create a buffer object to write the CSV data
     buffer = io.StringIO()
-    writer = csv.writer(buffer, quoting=csv.QUOTE_ALL)
+    writer = csv.writer(buffer, delimiter=";", quoting=csv.QUOTE_ALL)
 
     # write the header row
     writer.writerow(['id', 'date', 'time-spent', 'programming-language', 'rating', 'description'])
