@@ -62,11 +62,12 @@ def query_db(query, args=(), one=False):
 
 def user_auth(mail_or_username, password):
     # authenticates the user. If not authenticated returns an error else returns username and if admin
-    cur = get_db().execute('select username from developer where username=? limit 1', (mail_or_username,))
-    username = cur.fetchone()
-    cur.close()
-    if username is None:
+    if "@" in mail_or_username:
         cur = get_db().execute('select username from developer where mail=? limit 1', (mail_or_username,))
+        username = cur.fetchone()
+        cur.close()
+    else:
+        cur = get_db().execute('select username from developer where username=? limit 1', (mail_or_username,))
         username = cur.fetchone()
         cur.close()
     if username is None:
