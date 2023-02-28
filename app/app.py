@@ -1,5 +1,7 @@
 import os
 from datetime import datetime
+
+import werkzeug
 from flask import Flask, abort, jsonify, make_response, flash, get_flashed_messages
 from flask import render_template
 from flask import redirect
@@ -113,7 +115,9 @@ def logout():
 @app.route('/delete_dev/<int:developer_id>')
 def dev_delete(developer_id):
     if session['admin']:
-        db.delete_dev(developer_id)
+        response = db.delete_dev(developer_id)
+        if "Error" in response:
+            flash(response)
         return redirect('/devs')
     flash('Error - Invalid permission')
     return redirect('/')
@@ -362,6 +366,10 @@ def add_record(user_id):
     else:
         return 'Error', 400
 
+
+@app.errorhandler(werkzeug.exceptions.HTTPException)
+def error_handler(exception):
+    return render_template('error_page.hmtl.html')
 
 
 if __name__ == '__main__':

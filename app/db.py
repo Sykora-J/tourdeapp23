@@ -192,10 +192,14 @@ def insert_dev(fname, lname, username, mail, password, bool_admin):
 
 
 def delete_dev(dev_id):
-    get_db().execute('delete from developer where id=?', (dev_id,))
-    get_db().commit()
-    get_db().execute('delete from devlog where developer_id=?', (dev_id,))
-    get_db().commit()
+    try:
+        get_db().execute('delete from developer where id=?', (dev_id,))
+        get_db().commit()
+        get_db().execute('delete from devlog where developer_id=?', (dev_id,))
+        get_db().commit()
+    except sqlite3.Error as e:
+        return "Error - developer doen't exist"
+    return "OK"
 
 
 def update_dev(dev_id, fname, lname, username, mail, password, bool_admin):
