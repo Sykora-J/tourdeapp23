@@ -2,7 +2,7 @@ import os
 from datetime import datetime
 
 import werkzeug
-from flask import Flask, abort, jsonify, make_response, flash, get_flashed_messages
+from flask import Flask, abort, jsonify, make_response, flash, get_flashed_messages, url_for, send_from_directory
 from flask import render_template
 from flask import redirect
 from flask import request
@@ -365,6 +365,12 @@ def add_record(user_id):
         return jsonify(record), 201
     else:
         return 'Error', 400
+
+
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory(os.path.join(app.root_path, 'static'),
+                               'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
 
 @app.errorhandler(werkzeug.exceptions.HTTPException)
