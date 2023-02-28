@@ -132,6 +132,9 @@ def dev_insert():  # put application's code here
             username = request.form.get('username', type=str).strip()
             mail = request.form.get('mail', type=str).strip()
             password = request.form.get('password', type=str)
+            if "@" in username:
+                flash("Error - username can't contain @")
+                return redirect('/devs')
             if request.form.get('admin'):
                 bool_admin = 1
             else:
@@ -155,6 +158,9 @@ def dev_edit(dev_id):  # put application's code here
             username = request.form.get('username', type=str).strip()
             mail = request.form.get('mail', type=str).strip()
             password = request.form.get('password', type=str)
+            if "@" in username:
+                flash("Error - username can't contain @")
+                return redirect('/devs')
             if request.form.get('admin'):
                 bool_admin = 1
             else:
@@ -223,18 +229,21 @@ def upload_logs():
             flash("Error - no file name")
             return redirect('/')
         if file and db.allowed_file(file.filename):
-            # read the CSV file
-            stream = io.StringIO(file.stream.read().decode("cp1250"), newline=None)
-            reader = csv.reader(stream)
-            # skip the header row
-            if len(next(reader)) != 5:
-                flash("Error - invalid file structure")
-                return redirect('/')
-            # iterate over each row and insert the log
-            for row in reader:
-                date, duration, lang, rating, note = row
-                date = datetime.strptime(date, "%d.%m.%Y").strftime("%Y-%m-%d")
-                db.insert_log(session['user_id'], date, lang, duration, rating, note)
+            try:
+                # read the CSV file
+                stream = io.StringIO(file.stream.read().decode("cp1250"), newline=None)
+                reader = csv.reader(stream)
+                # skip the header row
+                if len(next(reader)) != 5:
+                    flash("Error - invalid file structure")
+                    return redirect('/')
+                # iterate over each row and insert the log
+                for row in reader:
+                    date, duration, lang, rating, note = row
+                    date = datetime.strptime(date, "%d.%m.%Y").strftime("%Y-%m-%d")
+                    db.insert_log(session['user_id'], date, lang, duration, rating, note)
+            except Exception:
+                flash("Error - something went wrong")
     return redirect('/')
 
 
