@@ -384,7 +384,7 @@ def favicon():
 
 @app.errorhandler(werkzeug.exceptions.HTTPException)
 def error_handler(exception):
-    return render_template('error_page.hmtl.html')
+    return render_template('error_page.html')
 
 
 if __name__ == '__main__':
