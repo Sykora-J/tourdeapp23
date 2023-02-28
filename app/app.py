@@ -59,7 +59,7 @@ def login():
         else:
             error_message = 'Špatné přihlašovací údaje'
     username = ""
-    return render_template('login.html', username=username, error_message=error_message, user_or_mail=user_or_mail)
+    return render_template('login.html', username=username, error_message=error_message)
 
 
 @app.route('/devs')
