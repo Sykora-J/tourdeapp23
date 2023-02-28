@@ -165,7 +165,7 @@ def dev_edit(dev_id):  # put application's code here
                 result = db.update_dev(dev_id, fname, lname, username, mail, password, bool_admin)
                 if "Error" in result:
                     flash(result)
-                else:
+                elif dev_id == session['user_id']:
                     session['username'] = username
             else:
                 flash("Error - something is missing")
