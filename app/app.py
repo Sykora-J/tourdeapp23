@@ -57,7 +57,7 @@ def login():
             session["admin"] = user.admin
             return redirect('/')
         else:
-            error_message = 'Špatné přihlašovací údaje'
+            error_message = 'Wrong login credentials'
     username = ""
     return render_template('login.html', username=username, error_message=error_message)
 
