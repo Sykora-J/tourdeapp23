@@ -9,7 +9,8 @@
                 <div class="modal-body">
                     <div>
                         <label class="form-label" for="work_date">Date:</label>
-                        <input class="form-control" type="date" id="work_date" name="work_date" required>
+                        <input class="form-control" type="date" id="work_date" name="work_date" max="3000-12-31"
+                               required>
                     </div>
                     <div>
                         <label class="form-label" for="lang">What language?</label>
@@ -33,7 +34,8 @@
                     </div>
                     <div>
                         <label class="form-label" for="note">Note:</label>
-                        <input class="form-control" type="text" id="note" name="note">
+                        <textarea class="form-control" type="text" id="note" name="note" maxlength="256"
+                                  rows="2"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">

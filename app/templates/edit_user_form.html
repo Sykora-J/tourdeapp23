@@ -17,28 +17,28 @@
                         <div class="col">
                             <label class="form-label" for="fname">First name:</label>
                             <input class="form-control" type="text" id="fname" name="fname" value="{{ user.fname }}"
-                                   required>
+                                   maxlength="20" required>
                         </div>
                         <div class="col">
                             <label class="form-label" for="lname">Last name:</label>
                             <input class="form-control" type="text" id="lname" name="lname" value="{{ user.lname }}"
-                                   required>
+                                   maxlength="20" required>
                         </div>
                     </div>
                     <div>
                         <label class="form-label" for="username">Username:</label>
                         <input class="form-control" type="text" id="username" name="username"
-                               value="{{ user.username }}" required>
+                               value="{{ user.username }}" maxlength="20" required>
                     </div>
                     <div>
                         <label class="form-label" for="mail">E-mail:</label>
-                        <input class="form-control" type="text" id="mail" name="mail" value="{{ user.mail }}" required>
+                        <input class="form-control" type="email" id="mail" name="mail" value="{{ user.mail }}" maxlength="40" required>
                     </div>
 
                     <div>
                         <label class="form-label" for="password">Password:</label>
                         <input class="form-control" type="password" id="password" name="password"
-                               value="{{ user.password }}" required>
+                               value="{{ user.password }}" maxlength="20" required>
                     </div>
                     <div class="form-check form-switch mt-2">
                         <label class="form-check-label" for="admin">Admin</label>
