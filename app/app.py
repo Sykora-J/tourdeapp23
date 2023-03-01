@@ -239,9 +239,17 @@ def upload_logs():
                     return redirect('/')
                 # iterate over each row and insert the log
                 for row in reader:
-                    date, duration, lang, rating, note = row
-                    date = datetime.strptime(date, "%d.%m.%Y").strftime("%Y-%m-%d")
-                    db.insert_log(session['user_id'], date, lang, duration, rating, note)
+                    try:
+                        date, duration, lang, rating, note = row
+                        date = datetime.strptime(date, "%d.%m.%Y").strftime("%Y-%m-%d")
+                        duration = int(duration)
+                        rating = int(rating)
+                        if all([1 <= duration <= 1440, 1 <= len(lang) <= 20, 1 <= rating <= 5, len(note) <= 256]):
+                            db.insert_log(session['user_id'], date, lang, duration, rating, note)
+                        else:
+                            print(date)
+                    except Exception as e:
+                        print(duration, e)
             except Exception:
                 flash("Error - something went wrong")
         else:
