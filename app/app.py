@@ -216,6 +216,10 @@ def log_update(log_id):
     return redirect('/')
 
 
+def is_integer():
+    pass
+
+
 @app.route('/upload_logs', methods=['GET', 'POST'])
 def upload_logs():
     if request.method == 'POST':
