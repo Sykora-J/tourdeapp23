@@ -7,7 +7,6 @@ from flask.cli import with_appcontext
 
 import sqlite3
 import re
-import bcrypt
 
 
 def get_db():

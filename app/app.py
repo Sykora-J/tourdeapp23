@@ -244,6 +244,8 @@ def upload_logs():
                     db.insert_log(session['user_id'], date, lang, duration, rating, note)
             except Exception:
                 flash("Error - something went wrong")
+        else:
+            flash('Error - invalid file type')
     return redirect('/')
 
 
@@ -256,10 +258,10 @@ def download_logs():
 
     # create a buffer object to write the CSV data
     buffer = io.StringIO()
-    writer = csv.writer(buffer, delimiter=";", quoting=csv.QUOTE_ALL)
+    writer = csv.writer(buffer)
 
     # write the header row
-    writer.writerow(['id', 'date', 'time-spent', 'programming-language', 'rating', 'description'])
+    writer.writerow(['id', 'date', 'time_spent', 'programming_language', 'rating', 'description'])
 
     # write each log as a row in the CSV
     for date in logs:
@@ -298,8 +300,8 @@ def get_user_record(user_id, record_id):
         record = {
             "id": log["id"],
             "date": log["work_date"],
-            "time-spent": log["duration"],
-            "programming-language": log["lang"],
+            "time_spent": log["duration"],
+            "programming_language": log["lang"],
             "rating": log["rating"],
             "description": log["note"]
         }
@@ -316,8 +318,8 @@ def update_user_record(user_id, record_id):
     data = request.get_json()
     try:
         work_date = data['date']
-        lang = data['programming-language']
-        duration = data['time-spent']
+        lang = data['programming_language']
+        duration = data['time_spent']
         rating = data['rating']
         note = data['description']
     except KeyError:
@@ -344,8 +346,8 @@ def get_user_records(user_id):
             response.append({
                 "id": single_log.log_id,
                 "date": single_log.work_date,
-                "time-spent": single_log.duration,
-                "programming-language": single_log.lang,
+                "time_spent": single_log.duration,
+                "programming_language": single_log.lang,
                 "rating": single_log.rating,
                 "description": single_log.note
             })
@@ -356,8 +358,8 @@ def get_user_records(user_id):
 def add_record(user_id):
     data = request.json
     date = data.get('date')
-    time_spent = data.get('time-spent')
-    programming_language = data.get('programming-language')
+    time_spent = data.get('time_spent')
+    programming_language = data.get('programming_language')
     rating = data.get('rating')
     description = data.get('description')
     result = db.insert_log(user_id, date, programming_language, time_spent, rating, description)
@@ -366,8 +368,8 @@ def add_record(user_id):
         record = {
             'id': log_id,
             'date': date,
-            'time-spent': time_spent,
-            'programming-language': programming_language,
+            'time_spent': time_spent,
+            'programming_language': programming_language,
             'rating': rating,
             'description': description
         }
