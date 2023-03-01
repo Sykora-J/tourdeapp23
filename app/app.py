@@ -220,6 +220,7 @@ def is_integer():
     pass
 
 
+# update bitch
 @app.route('/upload_logs', methods=['GET', 'POST'])
 def upload_logs():
     if request.method == 'POST':

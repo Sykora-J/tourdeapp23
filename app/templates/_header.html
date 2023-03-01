@@ -1,9 +1,10 @@
 <nav class="navbar navbar-dark bg-dark">
     <div class="container-fluid">
         <a class="navbar-brand mb-0 h1" href="/">DevLog
-        {% if username != "" %} - {{ username }}{% endif %}</a>
+            {% if username != "" %} - {{ username }}{% endif %}</a>
         <div class="navbar-nav">
-            <a class="nav-item nav-link btn btn-dark" data-bs-toggle="tooltip" data-bs-html="true" title="Home-screen" href="/">
+            <a class="nav-item nav-link btn btn-dark" data-bs-toggle="tooltip" data-bs-html="true" title="Home"
+               href="/" data-bs-delay="{&quot;show&quot;: 400, &quot;hide&quot;: 200}" data-bs-placement="bottom">
                 <svg xmlns="http://www.w3.org/2000/svg" width="50" height="25" fill="currentColor"
                      class="bi bi-house-fill"
                      viewBox="0 0 16 16">
@@ -11,7 +12,8 @@
                     <path d="m8 3.293 6 6V13.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5V9.293l6-6Z"/>
                 </svg>
             </a>
-            <a class="nav-item nav-link btn btn-dark" data-bs-toggle="tooltip" data-bs-html="true" title="Log out" href="/logout">
+            <a id="Logout" class="nav-item nav-link btn btn-dark" data-bs-toggle="tooltip" data-bs-target="Logout"
+               data-bs-html="true" title="Log out" href="/logout" data-bs-delay="{&quot;show&quot;: 400, &quot;hide&quot;: 200}" data-bs-placement="bottom">
                 <svg xmlns="http://www.w3.org/2000/svg" width="50" height="25" fill="currentColor"
                      class="bi bi-box-arrow-left" viewBox="2 0 16 16">
                     <path fill-rule="evenodd"
@@ -21,29 +23,34 @@
                 </svg>
             </a>
             {% if admin %}
-                <a class="nav-item nav-link btn btn-dark" data-bs-toggle="tooltip" data-bs-html="true" title="Manage Users" href="/devs">
+                <a class="nav-item nav-link btn btn-dark" data-bs-toggle="tooltip" data-bs-html="true"
+                   title="Manage users" href="/devs" data-bs-delay="{&quot;show&quot;: 400, &quot;hide&quot;: 200}" data-bs-placement="bottom">
                     <svg xmlns="http://www.w3.org/2000/svg" width="50" height="25" fill="currentColor"
                          class="bi bi-person-fill-gear" viewBox="0 0 16 16">
                         <path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm-9 8c0 1 1 1 1 1h5.256A4.493 4.493 0 0 1 8 12.5a4.49 4.49 0 0 1 1.544-3.393C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4Zm9.886-3.54c.18-.613 1.048-.613 1.229 0l.043.148a.64.64 0 0 0 .921.382l.136-.074c.561-.306 1.175.308.87.869l-.075.136a.64.64 0 0 0 .382.92l.149.045c.612.18.612 1.048 0 1.229l-.15.043a.64.64 0 0 0-.38.921l.074.136c.305.561-.309 1.175-.87.87l-.136-.075a.64.64 0 0 0-.92.382l-.045.149c-.18.612-1.048.612-1.229 0l-.043-.15a.64.64 0 0 0-.921-.38l-.136.074c-.561.305-1.175-.309-.87-.87l.075-.136a.64.64 0 0 0-.382-.92l-.148-.045c-.613-.18-.613-1.048 0-1.229l.148-.043a.64.64 0 0 0 .382-.921l-.074-.136c-.306-.561.308-1.175.869-.87l.136.075a.64.64 0 0 0 .92-.382l.045-.148ZM14 12.5a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0Z"/>
                     </svg>
                 </a>
-            <button class="nav-item nav-link btn btn-dark" type="button" data-bs-toggle="modal"
-                    data-bs-target="#NewUser" data-bs-toggle="tooltip" data-bs-html="true" title="New user">
-                <svg xmlns="http://www.w3.org/2000/svg" width="50" height="25" fill="currentColor"
-                     class="bi bi-person-fill-add" viewBox="0 0 16 16">
-                    <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0Zm-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
-                    <path d="M2 13c0 1 1 1 1 1h5.256A4.493 4.493 0 0 1 8 12.5a4.49 4.49 0 0 1 1.544-3.393C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4Z"/>
-                </svg>
-            </button>
-            {% include '_user_form.html' %}
+                <span data-bs-toggle="modal" data-bs-target="#NewUser" data-bs-target="modal">
+                <button class="nav-item nav-link btn btn-dark" data-bs-toggle="tooltip" type="button"
+                        data-bs-html="true" title="New user" data-bs-delay="{&quot;show&quot;: 400, &quot;hide&quot;: 200}" data-bs-placement="bottom">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="50" height="25" fill="currentColor"
+                         class="bi bi-person-fill-add" viewBox="0 0 16 16">
+                        <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0Zm-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
+                        <path d="M2 13c0 1 1 1 1 1h5.256A4.493 4.493 0 0 1 8 12.5a4.49 4.49 0 0 1 1.544-3.393C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4Z"/>
+                    </svg>
+                </button>
+                </span>
+                {% include '_user_form.html' %}
             {% endif %}
-            <button class="nav-item nav-link btn btn-dark" type="button" data-bs-toggle="modal"
-                    data-bs-target="#NewLog" title="New log">
+            <span data-bs-toggle="modal" data-bs-target="#NewLog" data-bs-target="modal">
+            <button class="nav-item nav-link btn btn-dark" type="button" data-bs-toggle="tooltip" title="New log"
+                    data-bs-delay="{&quot;show&quot;: 400, &quot;hide&quot;: 200}" data-bs-placement="bottom">
                 <svg xmlns="http://www.w3.org/2000/svg" width="50" height="25" fill="currentColor"
                      class="bi bi-plus-square-fill" viewBox="0 0 16 16">
                     <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm6.5 4.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 1 0z"/>
                 </svg>
             </button>
+            </span>
             {% include '_log_form.html' %}
         </div>
     </div>
