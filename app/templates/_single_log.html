@@ -8,11 +8,12 @@
                 {% endfor %}
             </div>
             <div class="col text-end">
-                <a class="btn btn-outline-danger" href="delete_log/{{ log.log_id }}"
-                   style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem;" data-bs-toggle="tooltip"
-                   title="Delete" data-bs-delay="{&quot;show&quot;: 400, &quot;hide&quot;: 200}"
-                   data-bs-placement="bottom"><i
-                        class="bi bi-trash3-fill"></i></a>
+                <span tabindex="0" class="example-popover">
+                <a class="btn btn-outline-danger" role="button"
+                        style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem;"
+                        title="Delete" data-bs-delay="{&quot;show&quot;: 400, &quot;hide&quot;: 200}"
+                        data-bs-placement="bottom"  data-bs-toggle="tooltip"><i
+                        class="bi bi-trash3-fill"></i></a></span>
                 <a class="btn btn-outline-primary ms-1" href="/edit_log/{{ log.log_id }}"
                    style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem;" data-bs-toggle="tooltip"
                    title="Edit" data-bs-delay="{&quot;show&quot;: 400, &quot;hide&quot;: 200}"
@@ -29,3 +30,7 @@
         </div>
     {% endif %}
 </div>
+
+<a tabindex="0" class="btn btn-lg btn-danger" role="button" data-bs-toggle="popover" data-bs-toggle="tooltip" data-bs-trigger="focus"
+   data-bs-title="Dismissible popover" data-bs-html="true" data-bs-content="<a href=&quot;delete_log/{{ log.log_id }}&quot;>Confirm</a>">Dismissible
+    popover</a>
