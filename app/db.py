@@ -218,7 +218,7 @@ def update_dev(dev_id, fname, lname, username, mail, password, bool_admin):
 
 
 def list_langs():
-    langs = ['Python', 'Java', 'C++', 'Pascal', 'HTML:o)', 'Javascript', 'ChatGPT']
+    langs = ['Python', 'Java', 'C++', 'Pascal', 'HTML', 'Javascript', 'ChatGPT']
     return langs
 
 
