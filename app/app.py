@@ -263,7 +263,7 @@ def upload_logs():
                     except Exception as e:
                         failed_rows = failed_rows + 1
                 if failed_rows != 0:
-                    flash("Error - skipped " + str(failed_rows) + " rows")
+                    flash("Error - skipped rows: " + str(failed_rows))
             except Exception:
                 flash("Error - something went wrong")
         else:
