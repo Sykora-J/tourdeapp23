@@ -123,7 +123,11 @@ def logout():
 @app.route('/delete_dev/<int:developer_id>')
 def dev_delete(developer_id):
     if session['admin']:
-        response = db.delete_dev(developer_id)
+        if session['user_id'] != developer_id:
+            response = db.delete_dev(developer_id)
+        else:
+            flash("Error - you cannot delete yourself")
+            response = ""
         if "Error" in response:
             flash(response)
         return redirect('/devs')
