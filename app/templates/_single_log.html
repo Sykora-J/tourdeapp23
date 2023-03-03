@@ -8,7 +8,7 @@
                 {% endfor %}
             </div>
             <div class="col text-end">
-                <span data-bs-toggle="modal" data-bs-target="#Deletelog" data-bs-target="modal">
+                <span data-bs-toggle="modal" data-bs-target="#Deletelog{{ log.log_id }}" data-bs-target="modal">
                 <a class="btn btn-outline-danger" role="button"
                    style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem;"
                    data-bs-title="Delete log"
@@ -16,11 +16,11 @@
                    data-bs-html="true"
                    data-bs-delay="{&quot;show&quot;: 400, &quot;hide&quot;: 200}" data-bs-placement="bottom"><i
                         class="bi bi-trash3-fill"></i></a></span>
-                <div class="modal fade" id="Deletelog" tabindex="-1" aria-labelledby="DeleteLogLabel" aria-hidden="true">
+                <div class="modal fade" id="Deletelog{{ log.log_id }}" tabindex="-1" aria-labelledby="DeleteLogLabel{{ log.log_id }}" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered modal-sm">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h1 class="modal-title fs-5" id="DeleteLogLabel">Delete log</h1>
+                                <h1 class="modal-title fs-5" id="DeleteLogLabel{{ log.log_id }}">Delete log</h1>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                         aria-label="Close"></button>
                             </div>
