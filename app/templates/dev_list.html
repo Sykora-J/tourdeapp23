@@ -35,19 +35,38 @@
                                         {% if dev.bool_admin == True %}
                                             <span class="badge bg-warning text-dark">Admin</span>
                                         {% endif %}
-                                        <a tabindex="0" class="btn btn-outline-danger ms-2
+                                        <span data-bs-toggle="modal" data-bs-target="#Deleteuser" data-bs-target="modal">
+                                        <a class="btn btn-outline-danger ms-2
                                             {% if user_id == dev.user_id %}
                                             disabled
                                             {% endif %}"
-                                        data-bs-toggle="popover"
-                                        data-bs-trigger="focus"
-                                        data-bs-title="Delete user"
-                                        data-bs-content="<a class=&quot;btn btn-danger text-center&quot;
-                                                            href=&quot;/delete_dev/{{ dev.user_id }}&quot;>Confirm</a>"
-                                        data-bs-html="true"
-                                        data-bs-placement="left"><i
-                                            class="bi bi-trash3-fill"></i></a>
-                                        <a class="btn btn-outline-primary ms-1" href="/edit_user/{{ dev.user_id }}"><i
+                                           role="button"
+                                           data-bs-title="Delete user"
+                                           data-bs-toggle="tooltip" type="button"
+                                           data-bs-html="true"
+                                           data-bs-delay="{&quot;show&quot;: 400, &quot;hide&quot;: 200}" data-bs-placement="bottom"><i
+                                                class="bi bi-trash3-fill"></i></a></span>
+                                        <div class="modal fade" id="Deleteuser" tabindex="-1"
+                                             aria-labelledby="DeleteUserLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered modal-sm">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h1 class="modal-title fs-5" id="DeleteUserLabel">Delete user</h1>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                                aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body text-center">
+                                                        <a class="btn btn-danger text-center"
+                                                           href="/delete_dev/{{ dev.user_id }}">Confirm</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <a class="btn btn-outline-primary ms-1" href="/edit_user/{{ dev.user_id }}"
+                                           data-bs-toggle="tooltip"
+                                           title="Edit user"
+                                           data-bs-delay="{&quot;show&quot;: 400, &quot;hide&quot;: 200}"
+                                           data-bs-placement="bottom"><i
                                                 class="bi bi-pencil-square"></i></a>
                                     </div>
                                 </div>

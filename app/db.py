@@ -133,6 +133,11 @@ def select_all_users():
 def insert_log(dev_id, work_date, lang, duration, rating, note):
     if dev_id is None:
         return 'Error'
+    cur = get_db().execute('select * from developer where id=? limit 1', (dev_id,))
+    row = cur.fetchone()
+    cur.close()
+    if row is None:
+        return "Error"
     get_db().execute('insert into devlog (work_date, lang, duration, rating, note, developer_id) values (?,?,?,?,?,?)',
                      (work_date, lang, duration, rating, note, dev_id))
     get_db().commit()

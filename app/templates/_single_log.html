@@ -8,13 +8,28 @@
                 {% endfor %}
             </div>
             <div class="col text-end">
-                <a tabindex="0" class="btn btn-outline-danger" role="button" data-bs-toggle="popover"
-                        data-bs-trigger="focus" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem;"
-                        data-bs-title="Delete log"
-                        data-bs-content="<a class=&quot;btn btn-danger text-center&quot; href=&quot;delete_log/{{ log.log_id }}&quot;>Confirm</a>"
-                        data-bs-html="true"
-                        data-bs-placement="left"  ><i
-                        class="bi bi-trash3-fill"></i></a>
+                <span data-bs-toggle="modal" data-bs-target="#Deletelog" data-bs-target="modal">
+                <a class="btn btn-outline-danger" role="button"
+                   style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem;"
+                   data-bs-title="Delete log"
+                   data-bs-toggle="tooltip" type="button"
+                   data-bs-html="true"
+                   data-bs-delay="{&quot;show&quot;: 400, &quot;hide&quot;: 200}" data-bs-placement="bottom"><i
+                        class="bi bi-trash3-fill"></i></a></span>
+                <div class="modal fade" id="Deletelog" tabindex="-1" aria-labelledby="DeleteLogLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-sm">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="DeleteLogLabel">Delete log</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body text-center">
+                                <a class="btn btn-danger text-center" href="delete_log/{{ log.log_id }}">Confirm</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <a class="btn btn-outline-primary ms-1" href="/edit_log/{{ log.log_id }}"
                    style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem;" data-bs-toggle="tooltip"
                    title="Edit" data-bs-delay="{&quot;show&quot;: 400, &quot;hide&quot;: 200}"
