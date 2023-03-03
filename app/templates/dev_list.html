@@ -35,7 +35,9 @@
                                         {% if dev.bool_admin == True %}
                                             <span class="badge bg-warning text-dark">Admin</span>
                                         {% endif %}
-                                        <span data-bs-toggle="modal" data-bs-target="#Deleteuser" data-bs-target="modal">
+                                        {% if user_id != dev.user_id %}
+                                        <span data-bs-toggle="modal" data-bs-target="#Deleteuser{{ dev.user_id }}" data-bs-target="modal">
+                                        {% endif %}"
                                         <a class="btn btn-outline-danger ms-2
                                             {% if user_id == dev.user_id %}
                                             disabled
@@ -46,12 +48,12 @@
                                            data-bs-html="true"
                                            data-bs-delay="{&quot;show&quot;: 400, &quot;hide&quot;: 200}" data-bs-placement="bottom"><i
                                                 class="bi bi-trash3-fill"></i></a></span>
-                                        <div class="modal fade" id="Deleteuser" tabindex="-1"
-                                             aria-labelledby="DeleteUserLabel" aria-hidden="true">
+                                        <div class="modal fade" id="Deleteuser{{ dev.user_id }}" tabindex="-1"
+                                             aria-labelledby="DeleteUserLabel{{ dev.user_id }}" aria-hidden="true">
                                             <div class="modal-dialog modal-dialog-centered modal-sm">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h1 class="modal-title fs-5" id="DeleteUserLabel">Delete user</h1>
+                                                        <h1 class="modal-title fs-5" id="DeleteUserLabel{{ dev.user_id }}">Delete user</h1>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                                 aria-label="Close"></button>
                                                     </div>
