@@ -249,6 +249,7 @@ def upload_logs():
                     flash("Error - invalid file structure")
                     return redirect('/')
                 # iterate over each row and insert the log
+                failed_rows = 0
                 for row in reader:
                     try:
                         date, duration, lang, rating, note = row
@@ -258,9 +259,11 @@ def upload_logs():
                         if all([1 <= duration <= 1440, 1 <= len(lang) <= 20, 1 <= rating <= 5, len(note) <= 256]):
                             db.insert_log(session['user_id'], date, lang, duration, rating, note)
                         else:
-                            print(date)
+                            failed_rows = failed_rows + 1
                     except Exception as e:
-                        print(duration, e)
+                        failed_rows = failed_rows + 1
+                if failed_rows != 0:
+                    flash("Error - skipped " + str(failed_rows) + " rows")
             except Exception:
                 flash("Error - something went wrong")
         else:
