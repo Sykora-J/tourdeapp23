@@ -102,6 +102,12 @@ def dev_update_form(dev_id):
     return render_template('edit_user_form.html', langs=langs, user=user, admin=admin, user_id=user_id, username=username)
 
 
+@app.route('/about')
+def about():
+    username = session['username']
+    admin = session['admin']
+    return render_template('about.html', username=username, admin=admin)
+
 
 @app.route('/logout')
 def logout():
@@ -399,7 +405,11 @@ def favicon():
 
 @app.errorhandler(werkzeug.exceptions.HTTPException)
 def error_handler(exception):
-    return render_template('error_page.html')
+    try:
+        username = session['username']
+    except KeyError:
+        username = ""
+    return render_template('error_page.html', username=username)
 
 
 if __name__ == '__main__':
