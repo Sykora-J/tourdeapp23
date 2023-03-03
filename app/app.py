@@ -105,8 +105,10 @@ def dev_update_form(dev_id):
 @app.route('/about')
 def about():
     username = session['username']
+    langs = db.list_langs()
+    user_id = session["user_id"]
     admin = session['admin']
-    return render_template('about.html', username=username, admin=admin)
+    return render_template('about.html', username=username, admin=admin, user_id=user_id, langs=langs)
 
 
 @app.route('/logout')
