@@ -12,12 +12,13 @@
 <body>
 <section class="section content">
     <div class="container mt-4">
-        <div class="text-end w-100">
+        <div class="text-end w-100 mb-4">
             <a class="btn btn-sm" href="/notes" role="button"><i class="bi bi-arrow-clockwise"></i></a>
-            <a class="btn btn-sm" href="/server" role="button">Server stats <i class="bi bi-chevron-right"></i></a></div>
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xxl-4 g-2 g-lg-3">
+            <a class="btn btn-sm" href="/server" role="button">Server stats <i class="bi bi-chevron-right"></i></a>
+        </div>
+        <div class="row row-cols-4 g-2 g-lg-3">
             {% for note in notes %}
-                <div class="card m-1  bg-warning p-2 text-dark bg-opacity-10" style="max-width: 18rem;">
+                <div class="card m-1  bg-warning p-2 text-dark bg-opacity-10" >
                     <div class="card-body p-2">
 
                         <p class="card-text">{{ note[0] }}</p>
@@ -26,15 +27,53 @@
                                 <span class="text-end text-secondary">{{ note[1] }}</span>
                             </div>
                             <div class="col">
-                                <div class="text-end w-100"><a class="btn btn-sm" href="/delete/{{ note[2] }}"
-                                                               role="button"><i class="bi bi-x-lg"></i></a></div>
+                                <div class="text-end w-100">
+                                    <button type="button" class="btn btn-sm" data-bs-toggle="modal"
+                                            data-bs-target="#NewLog{{ note[2] }}">
+                                        <i class="bi bi-pen"></i>
+                                    </button>
+                                    <a class="btn btn-sm" href="/delete/{{ note[2] }}" role="button"><i
+                                            class="bi bi-x-lg"></i></a>
+                                    <div class="modal fade" id="NewLog{{ note[2] }}" tabindex="-1"
+                                         aria-labelledby="NewLogLabel"
+                                         aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <form action="/edit/{{ note[2] }}" method=post>
+                                                    <div class="modal-header">
+                                                        <h1 class="modal-title fs-5" id="NewLogLabel">Edit note</h1>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                                aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body text-start">
+                                                        <div>
+                                    <textarea class="form-control" type="text" id="content" name="content"
+                                              maxlength="120"
+                                              rows="2">{{ note[0] }}</textarea>
+                                                            <label class="form-label" for="username">Name:</label>
+                                                            <input class="form-control" type="text" id="username"
+                                                                   name="username" maxlength="30"
+                                                                   rows="2" value="{{ note[1] }}">
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">Close
+                                                        </button>
+                                                        <input type="submit" class="btn btn-dark" value="Save">
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
                     </div>
                 </div>
             {% endfor %}
-            <div class="card m-1 bg-warning p-2 text-dark bg-opacity-10" style="max-width: 18rem;">
+            <div class="card m-1 bg-warning p-2 text-dark bg-opacity-10">
                 <div class="card-body text-center">
                     <div class="row align-items-center h-100">
                         <div class="col align-self-center">

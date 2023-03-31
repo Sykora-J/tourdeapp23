@@ -40,6 +40,15 @@ def new():
     return redirect('/notes')
 
 
+@app.route('/edit/<int:id>', methods=['POST', 'GET'])
+def edit(id):
+    if request.method == 'POST':
+        content = request.form.get('content', type=str)
+        username = request.form.get('username', type=str)
+        db.edit_note(id, content, username)
+    return redirect('/notes')
+
+
 @app.route('/delete/<int:id>')
 def delete(id):
     db.delete_note(id)

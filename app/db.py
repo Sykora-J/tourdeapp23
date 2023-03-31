@@ -76,3 +76,13 @@ def select_notes():
         print(row['content'])
         notes.append(note)
     return notes
+
+
+def edit_note(id, content, username):
+    try:
+        get_db().execute(
+            'update record set content=?, username=? where id=?',
+            (content, username, id))
+    except sqlite3.Error as e:
+        return 'Error - Database error'
+    get_db().commit()
