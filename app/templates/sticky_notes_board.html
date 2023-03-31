@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sticky Notes Board</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@2.3.3/dist/purify.min.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.10.2/Sortable.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuedraggable@2.24.3/dist/vuedraggable.umd.js"></script>
+
+
+<style>
+  html, body, #app {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  html, body, #carouselExampleControls, .carousel-item {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  .carousel-inner {
+    height: 100%;
+  }
+</style>
+<style>
+  .carousel-control-prev-icon,
+  .carousel-control-next-icon {
+    background-color: rgba(128, 128, 128, 0.5);
+  }
+  .create-note-btn {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    z-index: 10;
+  }
+</style>
+
+</head>
+<body>
+    <div id="app">
+        <div id="carouselExampleControls" class="carousel slide" data-ride="carousel" data-interval="false">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <div class="container">
+                        <h1>Sticky Notes Board</h1>
+                        <vuedraggable class="row" :list="notes" :options="{group: 'notes'}" @change="onDragEnd">
+  <div class="col-md-4" v-for="note in notes" :key="note.id">
+    <sticky-note :note="note" @edit-note="editNote"></sticky-note>
+  </div>
+</vuedraggable>
+
+                        <button class="btn btn-primary create-note-btn" @click="addNote">Create Note</button>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="container">
+                        <h1 class="text-center">Server Statistics</h1>
+                        <div id="server-statistics-chart"></div>
+                    </div>
+                </div>
+            </div>
+            <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+    </div>
+
+    <script>
+    // Initialize Google Charts
+    google.charts.load('current', {'packages': ['corechart']});
+    google.charts.setOnLoadCallback(drawCharts);
+
+    function drawCharts() {
+      // Draw your server statistics charts here
+      var data = new google.visualization.DataTable();
+      data.addColumn('string', 'Label');
+      data.addColumn('number', 'Value');
+      data.addRows([
+        ['Server Uptime', 100],
+        ['Total Commits', 250],
+        ['Last Commit', 5],
+      ]);
+
+      var options = {
+        title: 'Server Statistics',
+        width: 600,
+        height: 400,
+      };
+
+      var chart = new google.visualization.PieChart(document.getElementById('server-statistics-chart'));
+      chart.draw(data, options);
+    }
+
+        Vue.component('sticky-note', {
+            delimiters: ['[[', ']]'],
+      props: ['note'],
+      template: `
+        <div class="card border-primary mb-3" @click="editNote" style="cursor: pointer;">
+          <div class="card-header">[[ note.title ]]</div>
+          <div class="card-body">
+            <p class="card-text">[[ note.content ]]</p>
+          </div>
+        </div>
+      `,
+      methods: {
+        editNote() {
+          this.$emit('edit-note', this.note);
+        }
+      }
+    });
+
+    new Vue({
+      el: '#app',
+      delimiters: ['[[', ']]'],
+      data: {
+        notes: [
+          { id: 1, title: 'Note 1', content: 'This is the content of note 1.' },
+          { id: 2, title: 'Note 2', content: 'This is the content of note 2.' },
+        ],
+        serverStatistics: {
+          // Placeholder server statistics data
+        },
+      },
+      methods: {
+        addNote() {
+            const newId = this.notes.length ? Math.max(...this.notes.map(n => n.id)) + 1 : 1;
+            const newNote = { id: newId, title: 'New Note', content: 'This is a new note.' };
+            this.notes.push(newNote);
+        },
+        deleteNote() {
+          // Remove the selected note from the notes array
+        },
+        updateNote() {
+          // Update the selected note in the notes array
+        },
+        fetchServerStatistics() {
+          // Fetch server statistics from the API and update the serverStatistics data
+        },
+        onDragEnd(event) {
+            console.log('Drag ended:', event);
+        },
+      },
+      mounted() {
+        // Fetch the server statistics when the component is mounted
+        this.fetchServerStatistics();
+      }
+    });
+    </script>
+</body>
+</html>
+
