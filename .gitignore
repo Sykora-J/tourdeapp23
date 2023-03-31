@@ -2,4 +2,3 @@ instance/
 local/
 .idea/
 app/__pycache__/
-time-spent.txt
